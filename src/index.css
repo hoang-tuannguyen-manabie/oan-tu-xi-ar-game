@@ -1337,6 +1337,48 @@ button {
   animation: debrief-banner-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 
+/* ========================================================================= */
+/* HOẠT ẢNH LẮC LÊN XUỐNG NHẸ OẲN TÙ XÌ 2 BÊN (THAY THẾ RUNG MÀN HÌNH)      */
+/* ========================================================================= */
+@keyframes rps-bob-player {
+  0%, 100% {
+    transform: translateY(0px) rotate(-3deg) scale(1);
+  }
+  50% {
+    transform: translateY(-16px) rotate(-1deg) scale(1.04);
+  }
+}
+
+@keyframes rps-bob-ai {
+  0%, 100% {
+    transform: translateY(0px) rotate(3deg) scale(1);
+  }
+  50% {
+    transform: translateY(-16px) rotate(1deg) scale(1.04);
+  }
+}
+
+@keyframes rps-hand-pulse {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 35px rgba(56, 189, 248, 0.75);
+  }
+}
+
+.animate-rps-bob-player {
+  animation: rps-bob-player 0.75s ease-in-out infinite;
+}
+
+.animate-rps-bob-ai {
+  animation: rps-bob-ai 0.75s ease-in-out infinite;
+}
+
+.animate-rps-hand-pulse {
+  animation: rps-hand-pulse 1.2s ease-in-out infinite;
+}
+
 
 /* Opening composition after removing the duplicated rule and mission strip. */
 .workshop-hero {
@@ -4068,5 +4110,47 @@ button {
 
 .animate-banner-pop {
   animation: debrief-banner-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+/* ========================================================================= */
+/* HOẠT ẢNH LẮC LÊN XUỐNG NHẸ OẲN TÙ XÌ 2 BÊN (THAY THẾ RUNG MÀN HÌNH)      */
+/* ========================================================================= */
+@keyframes rps-bob-player {
+  0%, 100% {
+    transform: translateY(0px) rotate(-3deg) scale(1);
+  }
+  50% {
+    transform: translateY(-16px) rotate(-1deg) scale(1.04);
+  }
+}
+
+@keyframes rps-bob-ai {
+  0%, 100% {
+    transform: translateY(0px) rotate(3deg) scale(1);
+  }
+  50% {
+    transform: translateY(-16px) rotate(1deg) scale(1.04);
+  }
+}
+
+@keyframes rps-hand-pulse {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 35px rgba(56, 189, 248, 0.75);
+  }
+}
+
+.animate-rps-bob-player {
+  animation: rps-bob-player 0.75s ease-in-out infinite;
+}
+
+.animate-rps-bob-ai {
+  animation: rps-bob-ai 0.75s ease-in-out infinite;
+}
+
+.animate-rps-hand-pulse {
+  animation: rps-hand-pulse 1.2s ease-in-out infinite;
 }
 

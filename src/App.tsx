@@ -43,6 +43,8 @@ const EMPTY_GAME_STATE: GameState = {
   countdownSeconds: 3.0,
   chantWord: 'OẲN',
   gapCountdown: 5,
+  liveGesture: null,
+  shufflingAIChoice: 'rock',
   playerChoice: null,
   aiChoice: null,
   lastResult: null,
@@ -79,10 +81,10 @@ export default function App() {
     setScreen('debrief');
   }, []);
 
-  const handleStartGame = (mouseMode: boolean) => {
+  const handleStartGame = () => {
     audio.init();
     audio.startMusic();
-    setDemoMode(mouseMode);
+    setDemoMode(false);
     setState(EMPTY_GAME_STATE);
     setRunKey((k) => k + 1);
     setScreen('playing');
@@ -149,7 +151,7 @@ export default function App() {
           <Debrief
             state={finalState}
             profile={playerProfile}
-            onReplay={() => handleStartGame(demoMode)}
+            onReplay={() => handleStartGame()}
             onOpenSetup={() => {
               setProfileModalOpen(true);
               setScreen('intro');

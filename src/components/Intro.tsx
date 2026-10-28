@@ -6,7 +6,7 @@ import { CharacterAvatar, getCharacterById } from './PlayerSetupModal';
 interface IntroProps {
   profile: PlayerProfile;
   onOpenSetup: () => void;
-  onStart: (mouseMode: boolean) => void;
+  onStart: () => void;
 }
 
 export function Intro({ profile, onOpenSetup, onStart }: IntroProps) {
@@ -109,25 +109,16 @@ export function Intro({ profile, onOpenSetup, onStart }: IntroProps) {
             </button>
           </div>
 
-          {/* Action buttons */}
-          <div className="flex flex-col sm:flex-row items-stretch gap-2 pt-0.5">
+          {/* Action button - Chơi thuần AR */}
+          <div className="pt-1">
             <button
               type="button"
-              onClick={() => onStart(false)}
-              className="min-h-[44px] px-5 py-2.5 rounded-2xl bg-gradient-to-r from-[#00D89A] via-[#10B981] to-[#059669] text-[#022318] hover:shadow-[0_0_28px_rgba(0,216,154,0.6)] font-black text-xs sm:text-sm uppercase tracking-wider transition-all transform hover:scale-[1.02] active:scale-[0.98] cursor-pointer flex items-center justify-center gap-2"
+              onClick={onStart}
+              className="w-full min-h-[48px] px-6 py-3 rounded-2xl bg-gradient-to-r from-[#00D89A] via-[#10B981] to-[#059669] text-[#022318] hover:shadow-[0_0_35px_rgba(0,216,154,0.7)] font-black text-sm uppercase tracking-wider transition-all transform hover:scale-[1.02] active:scale-[0.98] cursor-pointer flex items-center justify-center gap-2 shadow-lg"
             >
-              <span>🖐️</span>
-              <span>Vào Đấu Oẳn Tù Xì (Camera AR)</span>
+              <span className="text-xl">🖐️</span>
+              <span>BẮT ĐẦU ĐẤU OẲN TÙ XÌ (CAMERA AR)</span>
               <span>➔</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => onStart(true)}
-              className="min-h-[40px] px-3.5 py-2 rounded-2xl bg-white/10 hover:bg-white/15 border border-white/20 text-white font-bold text-xs uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-1.5"
-            >
-              <span>🖱️</span>
-              <span>Chơi chuột (Dự phòng)</span>
             </button>
           </div>
         </div>

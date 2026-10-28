@@ -49,6 +49,8 @@ export interface GameState {
   countdownSeconds: number; // 3.0s đếm ngược Oẳn - Tù - Xì
   chantWord: 'OẲN' | 'TÙ' | 'XÌ' | '';
   gapCountdown: number; // 5s gap giữa vòng 1 và vòng 2
+  liveGesture: RPSChoice | null; // Cử chỉ tay người chơi theo thời gian thực (AR)
+  shufflingAIChoice: RPSChoice; // Chiêu của AI nhảy ngẫu nhiên trong lúc đếm ngược
   playerChoice: RPSChoice | null;
   aiChoice: RPSChoice | null;
   lastResult: RPSResult | null;
@@ -86,6 +88,8 @@ export class GameEngine {
     countdownSeconds: 3.0,
     chantWord: '',
     gapCountdown: 5,
+    liveGesture: null,
+    shufflingAIChoice: 'rock',
     playerChoice: null,
     aiChoice: null,
     lastResult: null,
@@ -102,6 +106,7 @@ export class GameEngine {
   private liveGesture: RPSChoice | null = null;
   private liveGestureLabel: string = 'Đang nhận diện...';
   private phaseTimer: number = 0;
+  private aiShuffleTimer: number = 0;
   private lastChantPlayed: string = '';
   private shockwaves: Array<{ x: number; y: number; r: number; color: string; life: number; age: number }> = [];
   private particles: Array<{ x: number; y: number; vx: number; vy: number; color: string; size: number; alpha: number }> = [];
@@ -129,12 +134,14 @@ export class GameEngine {
       this.liveGesture = null;
       this.liveGestureLabel = 'Chưa phát hiện bàn tay';
     }
+    this.state.liveGesture = this.liveGesture;
   }
 
   // Chế độ chơi chuột / dự phòng
   setMouseChoice(choice: RPSChoice) {
     this.liveGesture = choice;
     this.liveGestureLabel = RPS_CHOICES[choice].vietnameseName;
+    this.state.liveGesture = choice;
   }
 
   // Bắt đầu đếm ngược 3s "Oẳn - Tù - Xì"
@@ -144,21 +151,23 @@ export class GameEngine {
     this.state.chantWord = 'OẲN';
     this.state.playerChoice = null;
     this.state.aiChoice = null;
+    this.state.shufflingAIChoice = getRandomAIChoice();
+    this.state.liveGesture = this.liveGesture;
     this.state.lastResult = null;
     this.state.resultMessage = '';
     this.state.resultDetail = '';
     this.phaseTimer = 0;
+    this.aiShuffleTimer = 0;
     this.lastChantPlayed = '';
+    this.state.screenShake = 0;
     this.onStateChange({ ...this.state });
   }
 
   update(dtMs: number) {
     const dt = dtMs / 1000;
 
-    // Giảm độ rung lắc màn hình dần dần
-    if (this.state.screenShake > 0) {
-      this.state.screenShake = Math.max(0, this.state.screenShake - dt * 25);
-    }
+    // Không rung lắc màn hình (hoạt ảnh lắc nhẹ tại 2 hình Kéo/Búa/Bao)
+    this.state.screenShake = 0;
 
     // Cập nhật hiệu ứng hạt & sóng xung kích
     this.updateVFX(dt);
@@ -166,24 +175,33 @@ export class GameEngine {
     if (this.state.phase === 'COUNTDOWN') {
       this.state.countdownSeconds -= dt;
 
-      // Xử lý đếm nhịp "OẲN - TÙ - XÌ" kèm hiệu ứng giật rung 3s
+      // Nhảy random ảnh chiêu thức bên máy liên tục trong lúc đếm ngược
+      this.aiShuffleTimer += dt;
+      if (this.aiShuffleTimer >= 0.11) {
+        this.aiShuffleTimer = 0;
+        const all: RPSChoice[] = ['rock', 'scissors', 'paper'];
+        const candidates = all.filter((c) => c !== this.state.shufflingAIChoice);
+        this.state.shufflingAIChoice = candidates[Math.floor(Math.random() * candidates.length)];
+      }
+
+      // Giữ đồng bộ nhận diện tay người chơi
+      this.state.liveGesture = this.liveGesture;
+
+      // Xử lý đếm nhịp "OẲN - TÙ - XÌ"
       if (this.state.countdownSeconds > 2.0) {
         this.state.chantWord = 'OẲN';
-        this.state.screenShake = Math.max(this.state.screenShake, 3.5);
         if (this.lastChantPlayed !== 'oan') {
           this.lastChantPlayed = 'oan';
           audio.playChant('oan');
         }
       } else if (this.state.countdownSeconds > 1.0) {
         this.state.chantWord = 'TÙ';
-        this.state.screenShake = Math.max(this.state.screenShake, 7.5);
         if (this.lastChantPlayed !== 'tu') {
           this.lastChantPlayed = 'tu';
           audio.playChant('tu');
         }
       } else if (this.state.countdownSeconds > 0) {
         this.state.chantWord = 'XÌ';
-        this.state.screenShake = Math.max(this.state.screenShake, 14);
         if (this.lastChantPlayed !== 'xi') {
           this.lastChantPlayed = 'xi';
           audio.playChant('xi');
@@ -219,12 +237,12 @@ export class GameEngine {
     this.state.phase = 'SHOWDOWN';
     this.state.countdownSeconds = 0;
     this.phaseTimer = 0;
-    this.state.screenShake = 18; // Giật nổ màn hình lúc chạm trán
+    this.state.screenShake = 0;
 
     // Tư thế tay sau cùng của người chơi
     let player = this.liveGesture;
     if (!player) {
-      // Nếu không bắt được tay lúc hết đếm ngược -> mặc định ra ngẫu nhiên hoặc búa
+      // Nếu không bắt được tay lúc hết đếm ngược -> mặc định ra búa
       player = 'rock';
     }
 
@@ -234,6 +252,7 @@ export class GameEngine {
 
     this.state.playerChoice = player;
     this.state.aiChoice = ai;
+    this.state.shufflingAIChoice = ai;
     this.state.lastResult = evaluation.result;
     this.state.resultMessage = evaluation.message;
     this.state.resultDetail = evaluation.detail;
@@ -357,12 +376,6 @@ export class GameEngine {
     const { width: w, height: h } = this;
 
     ctx.save();
-    // Hiệu ứng rung giật màn hình trong lúc đếm ngược 3s Oẳn Tù Xì
-    if (this.state.screenShake > 0.1) {
-      const shakeX = (Math.random() - 0.5) * this.state.screenShake * 2;
-      const shakeY = (Math.random() - 0.5) * this.state.screenShake * 2;
-      ctx.translate(shakeX, shakeY);
-    }
 
     // 1. Vẽ nền đấu trường Cyber
     this.drawBackground(ctx, w, h);

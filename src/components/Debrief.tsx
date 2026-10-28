@@ -3,6 +3,7 @@ import { PlayerProfile } from '../data/characters';
 import { RPS_CHOICES } from '../data/rps';
 import { GameState } from '../utils/engine';
 import { CharacterAvatar, getCharacterById } from './PlayerSetupModal';
+import { TenRoundProgressBar } from './TenRoundProgressBar';
 
 interface DebriefProps {
   state: GameState;
@@ -120,6 +121,16 @@ export function Debrief({
             <span className="text-[9px] font-bold text-white/50 uppercase">Tỉ Lệ Thắng</span>
             <b className="text-base sm:text-xl font-black font-mono text-[#38BDF8]">{winRate}%</b>
           </div>
+        </div>
+
+        {/* Thanh 10 Vòng Đấu Tổng Kết: Xanh = Thắng, Đỏ = Thua, Vàng = Hòa */}
+        <div className="w-full flex justify-center animate-slide-bottom">
+          <TenRoundProgressBar
+            history={state.history}
+            currentRound={2}
+            currentTurn={5}
+            phase="GAMEOVER"
+          />
         </div>
 
         {/* 2 Vòng Chi Tiết (Vòng 1 & Vòng 2) */}

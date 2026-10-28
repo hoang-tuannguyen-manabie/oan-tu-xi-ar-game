@@ -18,7 +18,10 @@ export interface RPSChoiceDef {
   image: string; // Base64 PNG image from casino-rock-paper-scissors
 }
 
-// 3 hình ảnh chuẩn trích xuất từ casino-rock-paper-scissors
+const base = import.meta.env.BASE_URL || '/';
+const asset = (relPath: string) => `${base}${relPath.replace(/^\/+/, '')}`;
+
+// 3 hình ảnh chuẩn trích xuất từ asset png-transparent-rock-paper-scissors
 export const RPS_CHOICES: Record<RPSChoice, RPSChoiceDef> = {
   rock: {
     id: 'rock',
@@ -31,7 +34,7 @@ export const RPS_CHOICES: Record<RPSChoice, RPSChoiceDef> = {
     beats: 'scissors',
     beatenBy: 'paper',
     verb: 'đập',
-    image: '/assets/rps/rock.png',
+    image: asset('assets/rps/rock.png'),
   },
   paper: {
     id: 'paper',
@@ -44,7 +47,7 @@ export const RPS_CHOICES: Record<RPSChoice, RPSChoiceDef> = {
     beats: 'rock',
     beatenBy: 'scissors',
     verb: 'bọc',
-    image: '/assets/rps/paper.png',
+    image: asset('assets/rps/paper.png'),
   },
   scissors: {
     id: 'scissors',
@@ -57,7 +60,7 @@ export const RPS_CHOICES: Record<RPSChoice, RPSChoiceDef> = {
     beats: 'paper',
     beatenBy: 'rock',
     verb: 'cắt',
-    image: '/assets/rps/scissors.png',
+    image: asset('assets/rps/scissors.png'),
   },
 };
 
