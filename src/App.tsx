@@ -69,25 +69,48 @@ export default function App() {
   const [state, setState] = useState<GameState>(EMPTY_GAME_STATE);
   const [finalState, setFinalState] = useState<GameState>(EMPTY_GAME_STATE);
   const [runKey, setRunKey] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   useEffect(() => {
     const intensity = state.phase === 'SHOWDOWN' ? 0.8 : state.streak >= 2 ? 0.5 : 0.2;
     audio.setIntensity(intensity);
   }, [state.phase, state.streak]);
 
-  const onGameOver = useCallback((s: GameState) => {
-    audio.stopMusic();
-    setFinalState(s);
-    setScreen('debrief');
+  // Hiệu ứng chuyển trang mượt mà phong cách Cyberpunk Game
+  const triggerTransition = useCallback((callback: () => void) => {
+    setIsTransitioning(true);
+    setTimeout(() => {
+      callback();
+    }, 120);
+    setTimeout(() => {
+      setIsTransitioning(false);
+    }, 450);
   }, []);
 
+  const onGameOver = useCallback((s: GameState) => {
+    triggerTransition(() => {
+      audio.stopMusic();
+      setFinalState(s);
+      setScreen('debrief');
+    });
+  }, [triggerTransition]);
+
   const handleStartGame = () => {
-    audio.init();
-    audio.startMusic();
-    setDemoMode(false);
-    setState(EMPTY_GAME_STATE);
-    setRunKey((k) => k + 1);
-    setScreen('playing');
+    triggerTransition(() => {
+      audio.init();
+      audio.startMusic();
+      setDemoMode(false);
+      setState(EMPTY_GAME_STATE);
+      setRunKey((k) => k + 1);
+      setScreen('playing');
+    });
+  };
+
+  const handleBackToIntro = () => {
+    triggerTransition(() => {
+      audio.stopMusic();
+      setScreen('intro');
+    });
   };
 
   const handleSaveProfile = (newProfile: PlayerProfile) => {
@@ -98,9 +121,20 @@ export default function App() {
 
   return (
     <div
-      className="app-pointer-stage flex h-dvh flex-col overflow-hidden bg-[#030714]"
+      className="app-pointer-stage relative flex h-dvh flex-col overflow-hidden bg-[#030714]"
       data-screen={screen}
     >
+      {/* HIỆU ỨNG LASER SWEEP KHI CHUYỂN TRANG */}
+      {isTransitioning && (
+        <div
+          className="pointer-events-none fixed inset-0 z-50 flex items-center justify-center overflow-hidden"
+          aria-hidden="true"
+        >
+          <div className="absolute inset-0 bg-[#030714]/70 backdrop-blur-md animate-curtain-fade" />
+          <div className="absolute w-[200%] h-1 bg-gradient-to-r from-transparent via-[#00D89A] to-transparent animate-laser-sweep shadow-[0_0_30px_#00D89A]" />
+        </div>
+      )}
+
       {/* MODAL CÀI ĐẶT THÔNG TIN NHÓM & NHÂN VẬT (Bắt buộc hoàn thành ban đầu) */}
       <PlayerSetupModal
         open={profileModalOpen}
@@ -110,7 +144,7 @@ export default function App() {
 
       {/* MÀN HÌNH CHƠI AR */}
       {screen === 'playing' ? (
-        <div key="screen-playing" className="flex-1 flex flex-col h-full overflow-hidden animate-page-enter">
+        <div key="screen-playing" className="flex-1 flex flex-col h-full overflow-hidden animate-screen-arena-enter">
           <GameHud
             state={state}
             profile={playerProfile}
@@ -121,10 +155,7 @@ export default function App() {
                 return !m;
               });
             }}
-            onQuit={() => {
-              audio.stopMusic();
-              setScreen('intro');
-            }}
+            onQuit={handleBackToIntro}
           />
           <main className="relative min-h-0 flex-1">
             <Game
@@ -138,7 +169,7 @@ export default function App() {
         </div>
       ) : screen === 'intro' ? (
         /* MÀN HÌNH GIỚI THIỆU */
-        <div key="screen-intro" className="flex-1 flex flex-col h-full overflow-hidden animate-page-enter">
+        <div key="screen-intro" className="flex-1 flex flex-col h-full overflow-hidden animate-screen-intro-enter">
           <Intro
             profile={playerProfile}
             onOpenSetup={() => setProfileModalOpen(true)}
@@ -147,16 +178,16 @@ export default function App() {
         </div>
       ) : (
         /* MÀN HÌNH TỔNG KẾT CHIẾN THẮNG */
-        <div key="screen-debrief" className="flex-1 flex flex-col h-full overflow-hidden animate-page-enter">
+        <div key="screen-debrief" className="flex-1 flex flex-col h-full overflow-hidden animate-screen-debrief-enter">
           <Debrief
             state={finalState}
             profile={playerProfile}
-            onReplay={() => handleStartGame()}
+            onReplay={handleStartGame}
             onOpenSetup={() => {
               setProfileModalOpen(true);
-              setScreen('intro');
+              handleBackToIntro();
             }}
-            onBackToIntro={() => setScreen('intro')}
+            onBackToIntro={handleBackToIntro}
           />
         </div>
       )}
