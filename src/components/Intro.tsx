@@ -61,10 +61,7 @@ export function Intro({ profile, difficulty, onSelectDifficulty, onOpenSetup, on
               </span>
             </h1>
 
-            <p className="text-white/70 text-[10px] sm:text-xs leading-relaxed mt-0.5 line-clamp-2">
-              Dùng <b>1 bàn tay</b> trước Camera AR: Đếm nhịp <b className="text-[#F59E0B]">OẲN - TÙ - XÌ (3s)</b>, khóa thế tay sau cùng để đối đầu thuật toán AI!
-            </p>
-          </div>
+            </div>
 
           {/* 3 Chiêu Thức Mini Strip (Hiển thị ngay trên mobile, trực quan, không chiếm chỗ) */}
           <div className="grid grid-cols-3 gap-1.5 p-1.5 rounded-xl bg-black/40 border border-white/10">
@@ -186,7 +183,7 @@ export function Intro({ profile, difficulty, onSelectDifficulty, onOpenSetup, on
               className="w-full min-h-[42px] sm:min-h-[46px] px-4 py-2 sm:py-2.5 rounded-xl bg-gradient-to-r from-[#00D89A] via-[#10B981] to-[#059669] text-[#022318] hover:shadow-[0_0_30px_rgba(0,216,154,0.7)] font-black text-xs sm:text-sm uppercase tracking-wider transition-all transform hover:scale-[1.01] active:scale-[0.99] cursor-pointer flex items-center justify-center gap-2 shadow-lg"
             >
               <span className="text-base sm:text-lg">🖐️</span>
-              <span>BẮT ĐẦU ĐẤU OẲN TÙ XÌ (AR CAMERA)</span>
+              <span>BẮT ĐẦU · XEM HƯỚNG DẪN AR</span>
               <span>➔</span>
             </button>
           </div>

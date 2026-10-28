@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { AIDifficulty } from './ai';
 import { Game } from './components/Game';
 import { Intro } from './components/Intro';
+import { Tutorial } from './components/Tutorial';
 import { Debrief } from './components/Debrief';
 import { CharacterAvatar, PlayerSetupModal } from './components/PlayerSetupModal';
 import {
@@ -14,7 +15,7 @@ import {
 import { audio } from './utils/audio';
 import { GameState } from './utils/engine';
 
-type Screen = 'intro' | 'playing' | 'debrief';
+type Screen = 'intro' | 'tutorial' | 'playing' | 'debrief';
 
 const DEFAULT_PROFILE: PlayerProfile = {
   groupName: 'Đội Chiến Binh AI',
@@ -100,6 +101,12 @@ export default function App() {
     });
   }, [triggerTransition]);
 
+  const handleGoToTutorial = () => {
+    triggerTransition(() => {
+      setScreen('tutorial');
+    });
+  };
+
   const handleStartGame = () => {
     triggerTransition(() => {
       audio.init();
@@ -181,6 +188,15 @@ export default function App() {
             difficulty={difficulty}
             onSelectDifficulty={setDifficulty}
             onOpenSetup={() => setProfileModalOpen(true)}
+            onStart={handleGoToTutorial}
+          />
+        </div>
+      ) : screen === 'tutorial' ? (
+        /* MÀN HÌNH HƯỚNG DẪN LUẬT CHƠI & TƯ THẾ AR */
+        <div key="screen-tutorial" className="flex-1 flex flex-col h-full overflow-hidden animate-screen-intro-enter">
+          <Tutorial
+            profile={playerProfile}
+            onBack={handleBackToIntro}
             onStart={handleStartGame}
           />
         </div>
