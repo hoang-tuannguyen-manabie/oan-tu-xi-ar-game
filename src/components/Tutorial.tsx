@@ -20,7 +20,6 @@ interface GestureGuideItem {
   beatenByDesc: string;
   poseTitle: string;
   poseHow: string;
-  arTip: string;
   badgeWin: string;
   badgeLose: string;
 }
@@ -38,8 +37,7 @@ export function Tutorial({ profile, onBack, onStart }: TutorialProps) {
       beatsDesc: 'Thắng KÉO (Đập Kéo)',
       beatenByDesc: 'Thua BAO (Bị Bao bọc)',
       poseTitle: 'Nắm Chặt Cả 5 Ngón',
-      poseHow: 'Gập chặt tất cả các ngón tay thành nắm đấm tròn, khép ngón cái ôm sát bên ngoài.',
-      arTip: 'Hướng nắm đấm về phía camera; tuyệt đối không để ngón cái hoặc ngón trỏ nhô ra ngoài.',
+      poseHow: 'Gập chặt tất cả các ngón tay thành nắm đấm tròn, khép ngón cái ôm sát bên ngoài các khớp ngón.',
       badgeWin: 'bg-[#10B981]/25 text-[#10B981] border-[#10B981]/50',
       badgeLose: 'bg-[#EF4444]/25 text-[#EF4444] border-[#EF4444]/50',
     },
@@ -53,7 +51,6 @@ export function Tutorial({ profile, onBack, onStart }: TutorialProps) {
       beatenByDesc: 'Thua BÚA (Bị Búa đập)',
       poseTitle: 'Duỗi Chữ V (2 Ngón)',
       poseHow: 'Duỗi thẳng và xòe rõ ngón trỏ cùng ngón giữa thành chữ V. Gập chặt 3 ngón còn lại vào lòng bàn tay.',
-      arTip: 'Hai ngón tay phải duỗi thẳng và tách nhau rõ ràng, tránh khép dính hai ngón vào nhau.',
       badgeWin: 'bg-[#10B981]/25 text-[#10B981] border-[#10B981]/50',
       badgeLose: 'bg-[#F59E0B]/25 text-[#F59E0B] border-[#F59E0B]/50',
     },
@@ -67,7 +64,6 @@ export function Tutorial({ profile, onBack, onStart }: TutorialProps) {
       beatenByDesc: 'Thua KÉO (Bị Kéo cắt)',
       poseTitle: 'Xòe Thẳng 5 Ngón',
       poseHow: 'Mở rộng và duỗi thẳng tất cả 5 ngón tay, giữ lòng bàn tay hoặc mu bàn tay phẳng hướng về camera.',
-      arTip: 'Các ngón tay xòe tách đều nhau, không khum bàn tay để Skeleton bắt trọn 5 đầu ngón.',
       badgeWin: 'bg-[#F59E0B]/25 text-[#F59E0B] border-[#F59E0B]/50',
       badgeLose: 'bg-[#EF4444]/25 text-[#EF4444] border-[#EF4444]/50',
     },
@@ -190,21 +186,18 @@ export function Tutorial({ profile, onBack, onStart }: TutorialProps) {
                 </div>
               </div>
 
-              {/* Chi tiết Tư thế tay & Mẹo camera AR: Chữ to, dễ đọc */}
-              <div className="p-2 rounded-lg sm:rounded-xl bg-white/5 border border-white/10 flex flex-col gap-1 text-[10px] sm:text-xs leading-relaxed">
-                <p className="text-white/95">
+              {/* Chi tiết Tư thế tay: Tập trung, chữ to, rõ ràng */}
+              <div className="p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-white/5 border border-white/10">
+                <p className="text-white/95 text-xs sm:text-sm leading-relaxed">
                   👉 <b>Tư thế:</b> {item.poseHow}
-                </p>
-                <p className="text-[#F4BE4F]">
-                  💡 <b>Mẹo Skeleton AR:</b> {item.arTip}
                 </p>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Mẹo nhận diện AR chuẩn 100%: Chữ to rõ */}
-        <div className="w-full p-2 sm:p-2.5 rounded-xl bg-white/5 border border-white/10 flex flex-col xs:flex-row items-center justify-between gap-1.5 sm:gap-3 text-[10px] sm:text-xs text-white/85 shrink-0">
+        {/* Lưu ý khi đấu AR: Dùng 1 bàn tay, nhịp đếm 3s */}
+        <div className="w-full p-2 sm:p-2.5 rounded-xl bg-white/5 border border-white/10 flex flex-col xs:flex-row items-center justify-between gap-1.5 sm:gap-3 text-xs sm:text-sm text-white/85 shrink-0">
           <div className="flex items-center gap-2">
             <span className="text-base sm:text-lg">🖐️</span>
             <span>
