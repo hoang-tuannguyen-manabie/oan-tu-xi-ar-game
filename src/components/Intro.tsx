@@ -126,9 +126,9 @@ export function Intro({ profile, difficulty, onSelectDifficulty, onOpenSetup, on
             <div className="grid grid-cols-3 gap-1.5">
               {(
                 [
-                  { id: 'easy', label: 'DỄ', desc: 'Học chậm, nhiệt độ cao', color: 'border-emerald-500/50 text-emerald-400 bg-emerald-500/10' },
-                  { id: 'normal', label: 'THƯỜNG', desc: 'Bayes + Markov chuẩn', color: 'border-sky-500/50 text-sky-400 bg-sky-500/10' },
-                  { id: 'hard', label: 'KHÓ', desc: 'Thích nghi & khai thác sâu', color: 'border-rose-500/50 text-rose-400 bg-rose-500/10' },
+                  { id: 'easy', label: 'DỄ', desc: 'Học chậm, nhiệt độ cao', color: 'border-emerald-400 bg-emerald-500/20 text-emerald-300' },
+                  { id: 'normal', label: 'THƯỜNG', desc: 'Bayes + Markov chuẩn', color: 'border-sky-400 bg-sky-500/20 text-sky-300' },
+                  { id: 'hard', label: 'KHÓ', desc: 'Thích nghi & khai thác sâu', color: 'border-rose-400 bg-rose-500/20 text-rose-300' },
                 ] as const
               ).map((opt) => {
                 const isSelected = difficulty === opt.id;
@@ -137,10 +137,10 @@ export function Intro({ profile, difficulty, onSelectDifficulty, onOpenSetup, on
                     key={opt.id}
                     type="button"
                     onClick={() => onSelectDifficulty(opt.id)}
-                    className={`p-1.5 rounded-xl border text-center transition-all cursor-pointer flex flex-col items-center justify-center ${
+                    className={`p-1.5 rounded-xl border-2 text-center transition-colors cursor-pointer flex flex-col items-center justify-center ${
                       isSelected
-                        ? `${opt.color} ring-2 ring-white/30 shadow-md font-black`
-                        : 'border-white/10 bg-black/20 text-white/50 hover:text-white/80 hover:bg-white/5 font-semibold'
+                        ? `${opt.color} shadow-lg font-black`
+                        : 'border-white/10 bg-black/30 text-white/50 hover:text-white/80 hover:bg-white/5 font-semibold'
                     }`}
                   >
                     <span className="text-[11px] uppercase tracking-wider">{opt.label}</span>

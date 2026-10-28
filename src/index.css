@@ -140,10 +140,10 @@ body {
 /* Holographic Core */
 .hologram-core { position: relative; display: flex; align-items: center; justify-content: center; min-height: 600px; transform-style: preserve-3d; perspective: 1000px; }
 .core-rings { position: absolute; width: 400px; height: 400px; transform: rotateX(70deg) translateY(-50px); transform-style: preserve-3d; }
-.ring { position: absolute; inset: 0; border-radius: 50%; border: 2px solid transparent; }
-.ring-1 { border-top-color: rgba(0,216,154,.6); border-bottom-color: rgba(0,216,154,.2); animation: ring-spin 8s linear infinite; box-shadow: 0 0 30px rgba(0,216,154,.2); }
-.ring-2 { inset: 30px; border-left-color: rgba(76,109,240,.6); border-right-color: rgba(76,109,240,.2); animation: ring-spin 12s linear infinite reverse; border-width: 1px; }
-.ring-3 { inset: 60px; border-top-color: rgba(255,255,255,.4); border-bottom-color: rgba(255,255,255,.1); animation: ring-spin 6s linear infinite; border-style: dashed; }
+.core-rings .ring { position: absolute; inset: 0; border-radius: 50%; border: 2px solid transparent; }
+.core-rings .ring-1 { border-top-color: rgba(0,216,154,.6); border-bottom-color: rgba(0,216,154,.2); animation: ring-spin 8s linear infinite; box-shadow: 0 0 30px rgba(0,216,154,.2); }
+.core-rings .ring-2 { inset: 30px; border-left-color: rgba(76,109,240,.6); border-right-color: rgba(76,109,240,.2); animation: ring-spin 12s linear infinite reverse; border-width: 1px; }
+.core-rings .ring-3 { inset: 60px; border-top-color: rgba(255,255,255,.4); border-bottom-color: rgba(255,255,255,.1); animation: ring-spin 6s linear infinite; border-style: dashed; }
 
 .core-cylinder { position: absolute; width: 140px; height: 350px; bottom: 20%; background: linear-gradient(180deg, rgba(0,216,154,.15) 0%, transparent 100%); clip-path: polygon(20% 0, 80% 0, 100% 100%, 0 100%); filter: blur(8px); animation: cylinder-pulse 4s ease-in-out infinite alternate; }
 .core-base { position: absolute; bottom: 10%; width: 480px; height: 120px; transform: rotateX(70deg); }
