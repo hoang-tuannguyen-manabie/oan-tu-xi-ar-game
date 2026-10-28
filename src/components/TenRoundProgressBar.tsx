@@ -56,8 +56,9 @@ export function TenRoundProgressBar({
         icon = '=';
       }
     } else if (isCurrent) {
+      // Lượt hiện tại: Hiện màu xanh dương nguyên khối đồng nhất, không lỗi UI
       bgStyle =
-        'bg-[#38BDF8]/25 border-[#38BDF8] text-white ring-2 ring-[#38BDF8]/70 shadow-[0_0_16px_rgba(56,189,248,0.7)] animate-pulse font-black';
+        'bg-[#38BDF8] border-[#38BDF8] text-[#02182b] shadow-[0_0_14px_rgba(56,189,248,0.65)] font-black';
     }
 
     const tooltip = record
@@ -70,17 +71,11 @@ export function TenRoundProgressBar({
       <div
         key={`turn-slot-${slotIndex}`}
         title={tooltip}
-        className={`relative flex items-center justify-center rounded-xl border transition-all duration-300 shrink-0 ${
+        className={`flex items-center justify-center rounded-xl border transition-all duration-200 shrink-0 select-none ${
           compact ? 'w-6 h-6 text-[10px]' : 'w-7 h-7 sm:w-8 sm:h-8 text-xs sm:text-sm'
         } ${bgStyle}`}
       >
         <span>{icon}</span>
-        {isCurrent && (
-          <span className="absolute -top-1 -right-1 flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#38BDF8] opacity-75" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-[#38BDF8]" />
-          </span>
-        )}
       </div>
     );
   };
