@@ -1,3 +1,4 @@
+import { RPS_CHOICES } from '../data/rps';
 import { TurnHistoryItem, GamePhase } from '../utils/engine';
 
 interface TenRoundProgressBarProps {
@@ -59,11 +60,17 @@ export function TenRoundProgressBar({
         'bg-[#38BDF8]/25 border-[#38BDF8] text-white ring-2 ring-[#38BDF8]/70 shadow-[0_0_16px_rgba(56,189,248,0.7)] animate-pulse font-black';
     }
 
+    const tooltip = record
+      ? `Lượt ${turnNumber}: Bạn ra ${RPS_CHOICES[record.playerChoice]?.vietnameseName || ''} (${RPS_CHOICES[record.playerChoice]?.emoji || ''}) v AI ${RPS_CHOICES[record.aiChoice]?.vietnameseName || ''} (${RPS_CHOICES[record.aiChoice]?.emoji || ''}) → ${record.result === 'win' ? 'Thắng máy (+100)' : record.result === 'lose' ? 'Thua máy (0)' : 'Hòa máy (+30)'}`
+      : isCurrent
+      ? `Lượt ${turnNumber} (Đang đấu)`
+      : `Lượt ${turnNumber} (Chưa đấu)`;
+
     return (
       <div
         key={`turn-slot-${slotIndex}`}
-        title={`Lượt ${turnNumber}${record ? `: ${record.result === 'win' ? 'Thắng máy (+100)' : record.result === 'lose' ? 'Thua máy (0)' : 'Hòa máy (+30)'}` : isCurrent ? ' (Đang đấu)' : ' (Chưa đấu)'}`}
-        className={`relative flex items-center justify-center rounded-xl border transition-all duration-300 ${
+        title={tooltip}
+        className={`relative flex items-center justify-center rounded-xl border transition-all duration-300 shrink-0 ${
           compact ? 'w-6 h-6 text-[10px]' : 'w-7 h-7 sm:w-8 sm:h-8 text-xs sm:text-sm'
         } ${bgStyle}`}
       >
@@ -79,16 +86,16 @@ export function TenRoundProgressBar({
   };
 
   return (
-    <div className="flex flex-col items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-[#060e24]/90 border border-white/15 backdrop-blur-md shadow-lg max-w-full">
+    <div className="flex flex-col items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-[#060e24]/90 border border-white/15 backdrop-blur-md shadow-lg max-w-full shrink-0">
       {/* Top Header & Tỷ số nhanh */}
       <div className="flex items-center justify-between gap-3 w-full text-[10px] sm:text-xs">
-        <span className="font-black uppercase tracking-wider text-white/70 flex items-center gap-1.5">
+        <span className="font-black uppercase tracking-wider text-white/70 flex items-center gap-1.5 shrink-0">
           <span>🎯</span>
           <span>TIẾN ĐỘ 10 VÒNG ĐẤU</span>
         </span>
 
         {/* Chú giải kết quả: Xanh = Thắng, Đỏ = Thua, Vàng = Hòa */}
-        <div className="flex items-center gap-2 font-bold">
+        <div className="flex items-center gap-2 font-bold shrink-0">
           <span className="flex items-center gap-1 text-[#00D89A]">
             <span className="w-2 h-2 rounded-full bg-[#00D89A] shadow-[0_0_6px_#00D89A]" />
             <span>Thắng {wins}</span>
@@ -104,24 +111,24 @@ export function TenRoundProgressBar({
         </div>
       </div>
 
-      {/* 10 Vòng đấu: 5 Vòng 1 + Phân cách + 5 Vòng 2 */}
-      <div className="flex items-center gap-1 sm:gap-2">
+      {/* 10 Vòng đấu: 5 Vòng 1 + Phân cách + 5 Vòng 2 (Luôn nằm trên 1 hàng ngang, tuyệt đối không wrap) */}
+      <div className="flex items-center gap-1 sm:gap-2 flex-nowrap shrink-0 overflow-x-auto max-w-full">
         {/* Vòng 1 Tag */}
-        <div className="flex items-center gap-1 p-1 rounded-xl bg-white/5 border border-white/10">
-          <span className="hidden md:inline text-[9px] font-black uppercase text-[#38BDF8] px-1">
+        <div className="flex items-center gap-1 p-1 rounded-xl bg-white/5 border border-white/10 flex-nowrap shrink-0">
+          <span className="text-[9px] font-black uppercase text-[#38BDF8] px-1 shrink-0">
             V1
           </span>
           {[0, 1, 2, 3, 4].map(renderSlot)}
         </div>
 
         {/* Intermission divider */}
-        <div className="flex flex-col items-center justify-center px-1">
+        <div className="flex flex-col items-center justify-center px-1 shrink-0">
           <span className="text-[10px] text-white/30 font-black">|</span>
         </div>
 
         {/* Vòng 2 Tag */}
-        <div className="flex items-center gap-1 p-1 rounded-xl bg-white/5 border border-white/10">
-          <span className="hidden md:inline text-[9px] font-black uppercase text-[#00D89A] px-1">
+        <div className="flex items-center gap-1 p-1 rounded-xl bg-white/5 border border-white/10 flex-nowrap shrink-0">
+          <span className="text-[9px] font-black uppercase text-[#00D89A] px-1 shrink-0">
             V2
           </span>
           {[5, 6, 7, 8, 9].map(renderSlot)}
