@@ -1,3 +1,4 @@
+import { AIDifficulty } from '../ai';
 import { MANABIE_MARK } from '../data/brand';
 import { PlayerProfile } from '../data/characters';
 import { RPS_CHOICES } from '../data/rps';
@@ -5,11 +6,13 @@ import { CharacterAvatar, getCharacterById } from './PlayerSetupModal';
 
 interface IntroProps {
   profile: PlayerProfile;
+  difficulty: AIDifficulty;
+  onSelectDifficulty: (d: AIDifficulty) => void;
   onOpenSetup: () => void;
   onStart: () => void;
 }
 
-export function Intro({ profile, onOpenSetup, onStart }: IntroProps) {
+export function Intro({ profile, difficulty, onSelectDifficulty, onOpenSetup, onStart }: IntroProps) {
   const character = getCharacterById(profile.characterId);
 
   return (
@@ -107,6 +110,45 @@ export function Intro({ profile, onOpenSetup, onStart }: IntroProps) {
               <span>✏️</span>
               <span>Đổi</span>
             </button>
+          </div>
+
+          {/* Lựa chọn độ khó AI */}
+          <div className="flex flex-col gap-1 p-2 rounded-2xl bg-white/5 border border-white/10">
+            <div className="flex items-center justify-between px-1">
+              <span className="text-[10px] font-black uppercase text-white/60 tracking-wider">
+                🤖 Độ khó AI Thích Nghi (10 lượt)
+              </span>
+              <span className="text-[10px] font-bold text-[#00D89A]">
+                {difficulty === 'hard' ? 'Thử thách cao' : difficulty === 'easy' ? 'Thử nghiệm nhẹ' : 'Cân bằng'}
+              </span>
+            </div>
+
+            <div className="grid grid-cols-3 gap-1.5">
+              {(
+                [
+                  { id: 'easy', label: 'DỄ', desc: 'Học chậm, nhiệt độ cao', color: 'border-emerald-500/50 text-emerald-400 bg-emerald-500/10' },
+                  { id: 'normal', label: 'THƯỜNG', desc: 'Bayes + Markov chuẩn', color: 'border-sky-500/50 text-sky-400 bg-sky-500/10' },
+                  { id: 'hard', label: 'KHÓ', desc: 'Thích nghi & khai thác sâu', color: 'border-rose-500/50 text-rose-400 bg-rose-500/10' },
+                ] as const
+              ).map((opt) => {
+                const isSelected = difficulty === opt.id;
+                return (
+                  <button
+                    key={opt.id}
+                    type="button"
+                    onClick={() => onSelectDifficulty(opt.id)}
+                    className={`p-1.5 rounded-xl border text-center transition-all cursor-pointer flex flex-col items-center justify-center ${
+                      isSelected
+                        ? `${opt.color} ring-2 ring-white/30 shadow-md font-black`
+                        : 'border-white/10 bg-black/20 text-white/50 hover:text-white/80 hover:bg-white/5 font-semibold'
+                    }`}
+                  >
+                    <span className="text-[11px] uppercase tracking-wider">{opt.label}</span>
+                    <span className="text-[8px] leading-tight opacity-75">{opt.desc}</span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           {/* Action button - Chơi thuần AR */}

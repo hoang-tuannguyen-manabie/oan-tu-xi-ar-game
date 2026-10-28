@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { FilesetResolver, HandLandmarker, HandLandmarkerResult } from '@mediapipe/tasks-vision';
+import { AIDifficulty } from '../ai';
 import { BRAND_MASCOTS } from '../data/brand';
 import { PlayerProfile } from '../data/characters';
 import { RPS_CHOICES } from '../data/rps';
@@ -17,11 +18,12 @@ const UI_STATE_PUBLISH_INTERVAL_MS = 75;
 interface GameProps {
   profile: PlayerProfile;
   demoMode: boolean;
+  difficulty?: AIDifficulty;
   onGameOver: (state: GameState) => void;
   onStateUpdate: (state: GameState) => void;
 }
 
-export function Game({ profile, demoMode, onGameOver, onStateUpdate }: GameProps) {
+export function Game({ profile, demoMode, difficulty = 'normal', onGameOver, onStateUpdate }: GameProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -105,7 +107,7 @@ export function Game({ profile, demoMode, onGameOver, onStateUpdate }: GameProps
         stopCamera();
         onGameOverRef.current(state);
       }
-    });
+    }, difficulty);
 
     const init = async () => {
       audio.init();
@@ -507,6 +509,27 @@ export function Game({ profile, demoMode, onGameOver, onStateUpdate }: GameProps
               <span className="text-[10px] sm:text-xs font-black uppercase text-[#EF4444] tracking-wider">
                 🤖 MANABIE AI
               </span>
+              <span
+                className={`px-1.5 py-0.2 rounded text-[9px] font-black uppercase tracking-wider ${
+                  (engineState?.difficulty || difficulty) === 'hard'
+                    ? 'bg-rose-500/25 border border-rose-500/50 text-rose-300'
+                    : (engineState?.difficulty || difficulty) === 'easy'
+                    ? 'bg-emerald-500/25 border border-emerald-500/50 text-emerald-300'
+                    : 'bg-sky-500/25 border border-sky-500/50 text-sky-300'
+                }`}
+              >
+                {(engineState?.difficulty || difficulty) === 'hard'
+                  ? 'Khó'
+                  : (engineState?.difficulty || difficulty) === 'easy'
+                  ? 'Dễ'
+                  : 'Thường'}
+              </span>
+            </div>
+
+            {/* AI Status Label - Trừu tượng hóa quá trình học */}
+            <div className="mb-1 text-[10px] text-white/60 font-semibold tracking-wide flex items-center gap-1">
+              <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#38BDF8] animate-ping" />
+              <span>{engineState?.aiStatusLabel || 'Đang quan sát'}</span>
             </div>
 
             {/* Khung hiển thị chiêu thức máy: Lắc lên xuống nhẹ (animate-rps-bob-ai) */}

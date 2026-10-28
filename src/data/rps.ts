@@ -18,7 +18,7 @@ export interface RPSChoiceDef {
   image: string; // Base64 PNG image from casino-rock-paper-scissors
 }
 
-const base = import.meta.env.BASE_URL || '/';
+const base = (import.meta as any).env?.BASE_URL || '/';
 const asset = (relPath: string) => `${base}${relPath.replace(/^\/+/, '')}`;
 
 // 3 hình ảnh chuẩn trích xuất từ asset png-transparent-rock-paper-scissors

@@ -1,5 +1,11 @@
 // Engine chính cho game AR Oẳn Tù Xì
 import {
+  AdaptiveRPSAI,
+  AIDifficulty,
+  AIPostMatchInsight,
+  ProbabilityDistribution,
+} from '../ai';
+import {
   evaluateRPS,
   getRandomAIChoice,
   RPSChoice,
@@ -61,12 +67,19 @@ export interface GameState {
   handsVisible: number;
   screenShake: number;
   history: TurnHistoryItem[];
+  difficulty: AIDifficulty;
+  aiStatus: 'analyzing' | 'ready';
+  aiStatusLabel: string;
+  predictedPlayerProbabilities?: ProbabilityDistribution;
+  aiInsight?: AIPostMatchInsight;
 }
 
 export class GameEngine {
   private width = 960;
   private height = 540;
   private onStateChange: (state: GameState) => void;
+  private adaptiveAI: AdaptiveRPSAI;
+  private pendingAIChoice: RPSChoice = 'rock';
 
   private state: GameState = {
     phase: 'CALIBRATING',
@@ -100,6 +113,9 @@ export class GameEngine {
     handsVisible: 0,
     screenShake: 0,
     history: [],
+    difficulty: 'normal',
+    aiStatus: 'ready',
+    aiStatusLabel: 'Sẵn sàng thi đấu',
   };
 
   private currentLandmarks: LandmarkPoint[] | null = null;
@@ -111,9 +127,44 @@ export class GameEngine {
   private shockwaves: Array<{ x: number; y: number; r: number; color: string; life: number; age: number }> = [];
   private particles: Array<{ x: number; y: number; vx: number; vy: number; color: string; size: number; alpha: number }> = [];
 
-  constructor(onStateChange: (state: GameState) => void) {
+  constructor(
+    onStateChange: (state: GameState) => void,
+    initialDifficulty: AIDifficulty = 'normal'
+  ) {
     this.onStateChange = onStateChange;
+    this.state.difficulty = initialDifficulty;
+    this.adaptiveAI = new AdaptiveRPSAI({
+      difficulty: initialDifficulty,
+      maxTurns: 10,
+    });
     this.startCountdown();
+  }
+
+  setDifficulty(difficulty: AIDifficulty) {
+    this.state.difficulty = difficulty;
+    this.adaptiveAI.setDifficulty(difficulty);
+    this.onStateChange({ ...this.state });
+  }
+
+  getAdaptiveAI(): AdaptiveRPSAI {
+    return this.adaptiveAI;
+  }
+
+  private getAIStatusText(turn: number): string {
+    if (turn <= 1) return 'Đang quan sát lượt mở màn';
+    if (turn <= 3) return 'Đang học tần suất ra chiêu';
+    if (turn <= 6) return 'Phân tích thói quen chuyển chiêu';
+    return 'Thích nghi sâu & dự đoán phản đòn';
+  }
+
+  /**
+   * Tính số thứ tự lượt tổng thể (1..10) trên toàn bộ 2 vòng
+   */
+  getOverallTurnNumber(): number {
+    if (this.state.round === 1) {
+      return Math.max(1, Math.min(5, this.state.turn));
+    }
+    return Math.max(6, Math.min(10, 5 + this.state.turn));
   }
 
   resize(w: number, h: number) {
@@ -146,11 +197,26 @@ export class GameEngine {
 
   // Bắt đầu đếm ngược 3s "Oẳn - Tù - Xì"
   private startCountdown() {
+    const overallTurn = this.getOverallTurnNumber();
+    if (overallTurn > 10) {
+      this.finishGame();
+      return;
+    }
+
     this.state.phase = 'COUNTDOWN';
     this.state.countdownSeconds = 3.0;
     this.state.chantWord = 'OẲN';
     this.state.playerChoice = null;
     this.state.aiChoice = null;
+    this.state.aiStatus = 'analyzing';
+
+    // AI chuẩn bị dự đoán và chốt nước TRƯỚC KHI người chơi ra chiêu (Tuân thủ nghiêm ngặt Anti-leakage)
+    const prediction = this.adaptiveAI.prepareTurn(overallTurn);
+    this.pendingAIChoice = prediction.chosenAIChoice;
+    this.state.predictedPlayerProbabilities = prediction.predictedPlayerProbabilities;
+    this.state.aiStatus = 'ready';
+    this.state.aiStatusLabel = this.getAIStatusText(overallTurn);
+
     this.state.shufflingAIChoice = getRandomAIChoice();
     this.state.liveGesture = this.liveGesture;
     this.state.lastResult = null;
@@ -234,6 +300,7 @@ export class GameEngine {
 
   // Ghi nhận tư thế sau cùng và so tài với AI
   private resolveShowdown() {
+    const overallTurn = this.getOverallTurnNumber();
     this.state.phase = 'SHOWDOWN';
     this.state.countdownSeconds = 0;
     this.phaseTimer = 0;
@@ -246,9 +313,14 @@ export class GameEngine {
       player = 'rock';
     }
 
-    // Máy random ngẫu nhiên 1 trong 3 dạng
-    const ai = getRandomAIChoice();
+    // Lấy chiêu thức đã được AI khóa trước từ lúc bắt đầu đếm ngược qua thuật toán thích nghi
+    const ai = this.pendingAIChoice;
     const evaluation = evaluateRPS(player, ai);
+
+    // AI cập nhật hồ sơ và học hỏi từ kết quả vừa xảy ra
+    this.adaptiveAI.recordTurnResult(overallTurn, player, evaluation.result);
+    this.state.aiStatus = 'analyzing';
+    this.state.aiStatusLabel = 'Đang cập nhật phân phối xác suất...';
 
     this.state.playerChoice = player;
     this.state.aiChoice = ai;
@@ -315,13 +387,18 @@ export class GameEngine {
         this.state.chantWord = '';
         this.onStateChange({ ...this.state });
       } else {
-        // Hết cả 2 vòng (10 lượt) -> Kết thúc game!
-        this.state.phase = 'GAMEOVER';
-        this.state.isGameOver = true;
-        this.state.isWin = this.state.totalWins > this.state.totalLosses;
-        this.onStateChange({ ...this.state });
+        // Hết cả 2 vòng (đúng 10 lượt) -> Kết thúc game và tạo nhận định AI!
+        this.finishGame();
       }
     }
+  }
+
+  private finishGame() {
+    this.state.phase = 'GAMEOVER';
+    this.state.isGameOver = true;
+    this.state.isWin = this.state.totalWins > this.state.totalLosses;
+    this.state.aiInsight = this.adaptiveAI.generatePostMatchInsight();
+    this.onStateChange({ ...this.state });
   }
 
   private updateVFX(dt: number) {

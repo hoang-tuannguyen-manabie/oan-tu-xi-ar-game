@@ -49,8 +49,8 @@ export function Debrief({
         </button>
       </header>
 
-      {/* Main debrief card - Gọn gàng trên 1 màn hình */}
-      <main className="my-auto py-2 max-w-2xl mx-auto w-full flex flex-col items-center gap-2 sm:gap-3">
+      {/* Main debrief card */}
+      <main className="my-auto py-1 max-w-2xl mx-auto w-full flex flex-col items-center gap-2 overflow-y-auto max-h-[calc(100vh-110px)] pr-1 custom-scrollbar">
         {/* Victory Banner */}
         <div
           className={`w-full p-3 sm:p-4 rounded-2xl border flex items-center justify-between gap-3 relative overflow-hidden animate-banner-pop ${
@@ -132,6 +132,68 @@ export function Debrief({
             phase="GAMEOVER"
           />
         </div>
+
+        {/* Phân tích AI Thích Nghi (Post-match Insight) */}
+        {state.aiInsight && (
+          <div className="w-full p-2.5 sm:p-3 rounded-xl bg-gradient-to-r from-[#0c1b3f]/90 via-[#0a1532]/90 to-[#070e24]/90 border border-[#38BDF8]/40 shadow-lg flex flex-col gap-1.5 animate-slide-bottom">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-1.5">
+                <span className="text-sm">🧠</span>
+                <span className="text-[10px] sm:text-xs font-black uppercase text-[#38BDF8] tracking-wider">
+                  Phân Tích Chiến Thuật AI (Học qua 10 lượt)
+                </span>
+              </div>
+              <span className="text-[9px] px-2 py-0.5 rounded-full bg-[#38BDF8]/15 border border-[#38BDF8]/40 text-[#38BDF8] font-bold">
+                Độ khó: {state.difficulty === 'hard' ? 'Khó' : state.difficulty === 'easy' ? 'Dễ' : 'Thường'}
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1 text-xs">
+              {/* Thói quen / Nước đi yêu thích */}
+              <div className="p-2 rounded-lg bg-black/40 border border-white/5 flex flex-col">
+                <span className="text-[9px] text-white/50 uppercase font-bold">Nước đi xuất hiện nhiều</span>
+                <div className="flex items-center gap-1.5 mt-0.5">
+                  <span className="text-base">{RPS_CHOICES[state.aiInsight.favoriteMove].emoji}</span>
+                  <span className="text-white font-bold text-xs">
+                    {RPS_CHOICES[state.aiInsight.favoriteMove].vietnameseName}
+                  </span>
+                  <span className="text-[#F59E0B] font-mono text-[11px] font-bold">
+                    ({state.aiInsight.favoriteMovePercentage}%)
+                  </span>
+                </div>
+              </div>
+
+              {/* Đặc điểm quan sát */}
+              <div className="p-2 rounded-lg bg-black/40 border border-white/5 flex flex-col">
+                <span className="text-[9px] text-white/50 uppercase font-bold">Quy luật quan sát</span>
+                <span className="text-[#00D89A] font-bold text-xs mt-0.5 truncate">
+                  {state.aiInsight.patternDetected}
+                </span>
+              </div>
+
+              {/* Điểm khó đoán */}
+              <div className="p-2 rounded-lg bg-black/40 border border-white/5 flex flex-col">
+                <div className="flex items-center justify-between">
+                  <span className="text-[9px] text-white/50 uppercase font-bold">Độ biến thiên (Khó đoán)</span>
+                  <span className="text-[#38BDF8] font-mono font-bold text-[11px]">
+                    {state.aiInsight.adaptabilityScore}/100
+                  </span>
+                </div>
+                <div className="w-full bg-white/10 rounded-full h-1.5 mt-1 overflow-hidden">
+                  <div
+                    className="h-full bg-gradient-to-r from-[#38BDF8] to-[#00D89A] rounded-full transition-all duration-500"
+                    style={{ width: `${state.aiInsight.adaptabilityScore}%` }}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Nhận xét khách quan */}
+            <p className="text-[10px] sm:text-[11px] text-white/70 italic leading-snug pt-0.5 border-t border-white/5">
+              💡 {state.aiInsight.summaryText}
+            </p>
+          </div>
+        )}
 
         {/* 2 Vòng Chi Tiết (Vòng 1 & Vòng 2) */}
         <div className="grid grid-cols-2 gap-2 w-full">

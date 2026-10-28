@@ -1,4 +1,4 @@
-const base = import.meta.env.BASE_URL || '/';
+const base = (import.meta as any).env?.BASE_URL || '/';
 const asset = (relPath: string) => `${base}${relPath.replace(/^\/+/, '')}`;
 
 export interface PlayerCharacter {

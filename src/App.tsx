@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { AIDifficulty } from './ai';
 import { Game } from './components/Game';
 import { Intro } from './components/Intro';
 import { Debrief } from './components/Debrief';
@@ -55,6 +56,9 @@ const EMPTY_GAME_STATE: GameState = {
   handsVisible: 0,
   screenShake: 0,
   history: [],
+  difficulty: 'normal',
+  aiStatus: 'ready',
+  aiStatusLabel: 'Sẵn sàng thi đấu',
 };
 
 export default function App() {
@@ -66,6 +70,7 @@ export default function App() {
   const [playerProfile, setPlayerProfile] = useState<PlayerProfile>(() => {
     return loadSavedPlayerProfile() || DEFAULT_PROFILE;
   });
+  const [difficulty, setDifficulty] = useState<AIDifficulty>('normal');
   const [state, setState] = useState<GameState>(EMPTY_GAME_STATE);
   const [finalState, setFinalState] = useState<GameState>(EMPTY_GAME_STATE);
   const [runKey, setRunKey] = useState(0);
@@ -100,7 +105,7 @@ export default function App() {
       audio.init();
       audio.startMusic();
       setDemoMode(false);
-      setState(EMPTY_GAME_STATE);
+      setState({ ...EMPTY_GAME_STATE, difficulty });
       setRunKey((k) => k + 1);
       setScreen('playing');
     });
@@ -162,6 +167,7 @@ export default function App() {
               key={runKey}
               profile={playerProfile}
               demoMode={demoMode}
+              difficulty={difficulty}
               onStateUpdate={setState}
               onGameOver={onGameOver}
             />
@@ -172,6 +178,8 @@ export default function App() {
         <div key="screen-intro" className="flex-1 flex flex-col h-full overflow-hidden animate-screen-intro-enter">
           <Intro
             profile={playerProfile}
+            difficulty={difficulty}
+            onSelectDifficulty={setDifficulty}
             onOpenSetup={() => setProfileModalOpen(true)}
             onStart={handleStartGame}
           />
@@ -252,6 +260,25 @@ function GameHud({
             ×{state.streak}
           </span>
         </div>
+      </div>
+
+      {/* AI Mode and Status Banner */}
+      <div className="hidden md:flex items-center gap-2 px-2 border-r border-white/10 shrink-0">
+        <span className="text-[9px] font-black uppercase text-white/50">AI Thích Nghi</span>
+        <span
+          className={`px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider ${
+            state.difficulty === 'hard'
+              ? 'bg-[#EF4444]/20 border border-[#EF4444]/50 text-[#EF4444]'
+              : state.difficulty === 'easy'
+              ? 'bg-[#10B981]/20 border border-[#10B981]/50 text-[#10B981]'
+              : 'bg-[#38BDF8]/20 border border-[#38BDF8]/50 text-[#38BDF8]'
+          }`}
+        >
+          {state.difficulty === 'hard' ? 'Khó' : state.difficulty === 'easy' ? 'Dễ' : 'Thường'}
+        </span>
+        <span className="text-[10px] text-white/70 font-semibold truncate max-w-[170px]">
+          {state.aiStatusLabel || 'Đang quan sát'}
+        </span>
       </div>
 
       {/* Controls */}
