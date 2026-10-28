@@ -230,7 +230,7 @@ export function PlayerSetupModal({
                 <span className="text-[#00D89A] font-black">{selectedChar.name}</span>
               </div>
 
-              <div className="grid grid-cols-6 sm:grid-cols-9 gap-1.5 p-2 rounded-2xl bg-black/40 border border-white/10">
+              <div className="grid grid-cols-6 sm:grid-cols-9 gap-1.5 p-2 rounded-2xl bg-black/40 border border-white/10 max-h-[46dvh] overflow-y-auto pr-1">
                 {PLAYER_CHARACTERS.map((char) => {
                   const isSelected = char.id === selectedCharId;
                   return (

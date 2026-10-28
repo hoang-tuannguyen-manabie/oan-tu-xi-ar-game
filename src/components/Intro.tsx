@@ -16,7 +16,7 @@ export function Intro({ profile, difficulty, onSelectDifficulty, onOpenSetup, on
   const character = getCharacterById(profile.characterId);
 
   return (
-    <div className="workshop-stage force-motion flex-1 flex flex-col justify-between p-3 sm:p-5 overflow-hidden h-full">
+    <div className="workshop-stage force-motion flex-1 flex flex-col justify-between p-2 sm:p-4 overflow-hidden h-full select-none">
       {/* Background atmosphere */}
       <div className="workshop-atmosphere" aria-hidden="true">
         <span className="workshop-grid" />
@@ -26,77 +26,104 @@ export function Intro({ profile, difficulty, onSelectDifficulty, onOpenSetup, on
       </div>
 
       {/* Header */}
-      <header className="flex items-center justify-between gap-3 pb-2 border-b border-white/10 shrink-0 animate-slide-top">
-        <div className="flex items-center gap-2.5">
-          <img className="h-6 sm:h-7 object-contain" src={MANABIE_MARK} alt="Manabie" />
+      <header className="flex items-center justify-between gap-2 pb-1.5 border-b border-white/10 shrink-0 animate-slide-top">
+        <div className="flex items-center gap-2">
+          <img className="h-5 sm:h-6 object-contain" src={MANABIE_MARK} alt="Manabie" />
           <div className="flex flex-col">
-            <span className="text-white font-black text-xs sm:text-sm tracking-wider">MANABIE AI LAB</span>
-            <span className="text-[#00D89A] text-[10px] font-bold">HOẠT ĐỘNG KHỞI ĐỘNG AR</span>
+            <span className="text-white font-black text-xs sm:text-sm tracking-wider leading-tight">MANABIE AI LAB</span>
+            <span className="text-[#00D89A] text-[9px] sm:text-[10px] font-bold">HOẠT ĐỘNG KHỞI ĐỘNG AR</span>
           </div>
         </div>
 
-        <div className="px-2.5 py-0.5 rounded-full bg-[#00D89A]/15 border border-[#00D89A]/40 text-[#00D89A] text-[10px] font-black tracking-wider uppercase">
+        <div className="px-2 py-0.5 rounded-full bg-[#00D89A]/15 border border-[#00D89A]/40 text-[#00D89A] text-[9px] sm:text-[10px] font-black tracking-wider uppercase">
           ● SẴN SÀNG
         </div>
       </header>
 
-      {/* Main Content - Cố gắng vừa vặn trên 1 màn hình */}
-      <main className="my-auto py-2 flex flex-col lg:flex-row items-center justify-center gap-4 sm:gap-8 max-w-5xl mx-auto w-full">
-        {/* Left Column: Titles, Rule, Actions */}
-        <div className="flex flex-col gap-2.5 max-w-lg w-full animate-slide-left">
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="px-2 py-0.5 rounded-md bg-[#4C6DF0]/25 border border-[#4C6DF0]/40 text-[#8ba2ff] text-[10px] font-black uppercase tracking-wider">
-              Khởi động AR
-            </span>
-            <span className="text-white/40 text-xs">·</span>
-            <span className="text-[#F4BE4F] text-[10px] sm:text-xs font-bold">Skeleton Khớp Bàn Tay</span>
-          </div>
-
-          <h1 className="text-2xl sm:text-4xl font-black text-white leading-tight">
-            OẲN TÙ XÌ <br />
-            <span className="bg-gradient-to-r from-[#F59E0B] via-[#EF4444] to-[#10B981] bg-clip-text text-transparent">
-              ĐẤU TRÍ VỚI AI
-            </span>
-          </h1>
-
-          <p className="text-white/80 text-xs sm:text-sm leading-relaxed">
-            Dùng <b>Skeleton AR bàn tay</b>: Trước mỗi lượt đấu, màn hình hiển thị{' '}
-            <b className="text-[#F59E0B]">OẲN - TÙ - XÌ</b> rung giật trong <b>3 giây</b> đếm ngược. Hệ thống sẽ ghi nhận tư thế tay sau cùng để so tài với AI!
-          </p>
-
-          {/* Quick Metrics: 2 Vòng chơi (Mỗi vòng 5 lượt đấu + Gap 5s) */}
-          <div className="grid grid-cols-2 gap-2 text-xs">
-            <div className="p-2 sm:p-2.5 rounded-xl bg-[#38BDF8]/10 border border-[#38BDF8]/35 flex flex-col">
-              <div className="flex items-center gap-1">
-                <span className="w-2 h-2 rounded-full bg-[#38BDF8]" />
-                <span className="text-[#38BDF8] font-black uppercase text-[10px]">VÒNG 1: KHỞI ĐỘNG</span>
-              </div>
-              <b className="text-white text-xs sm:text-sm font-black mt-0.5">5 Lượt Đấu Đầu Tiên</b>
-              <span className="text-[10px] text-white/60">Người chơi 1 làm quen</span>
+      {/* Main Content - Cực kỳ gọn gàng, chuẩn Mobile-First, 100% Không Scroll */}
+      <main className="my-auto py-1 flex flex-col lg:flex-row items-center justify-center gap-3 sm:gap-6 max-w-4xl mx-auto w-full shrink overflow-hidden">
+        {/* Left Column: Title, 3 Moves Preview, Rounds, Profile, Difficulty, Action */}
+        <div className="flex flex-col gap-1.5 sm:gap-2 max-w-md w-full animate-slide-left shrink-0">
+          {/* Tag & Heading */}
+          <div className="flex flex-col">
+            <div className="flex items-center gap-1.5 mb-0.5">
+              <span className="px-1.5 py-0.2 rounded bg-[#4C6DF0]/25 border border-[#4C6DF0]/40 text-[#8ba2ff] text-[9px] font-black uppercase tracking-wider">
+                Khởi động AR
+              </span>
+              <span className="text-white/30 text-xs">·</span>
+              <span className="text-[#F4BE4F] text-[9px] sm:text-[10px] font-bold">Skeleton Khớp Bàn Tay</span>
             </div>
 
-            <div className="p-2 sm:p-2.5 rounded-xl bg-[#00D89A]/10 border border-[#00D89A]/35 flex flex-col">
-              <div className="flex items-center gap-1">
-                <span className="w-2 h-2 rounded-full bg-[#00D89A] animate-ping" />
-                <span className="text-[#00D89A] font-black uppercase text-[10px]">VÒNG 2: TĂNG TỐC 🔥</span>
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-white leading-tight">
+              OẲN TÙ XÌ ·{' '}
+              <span className="bg-gradient-to-r from-[#F59E0B] via-[#EF4444] to-[#10B981] bg-clip-text text-transparent">
+                ĐẤU TRÍ VỚI AI
+              </span>
+            </h1>
+
+            <p className="text-white/70 text-[10px] sm:text-xs leading-relaxed mt-0.5 line-clamp-2">
+              Dùng <b>1 bàn tay</b> trước Camera AR: Đếm nhịp <b className="text-[#F59E0B]">OẲN - TÙ - XÌ (3s)</b>, khóa thế tay sau cùng để đối đầu thuật toán AI!
+            </p>
+          </div>
+
+          {/* 3 Chiêu Thức Mini Strip (Hiển thị ngay trên mobile, trực quan, không chiếm chỗ) */}
+          <div className="grid grid-cols-3 gap-1.5 p-1.5 rounded-xl bg-black/40 border border-white/10">
+            <div className="flex items-center gap-1.5 px-1.5 py-1 rounded-lg bg-[#F59E0B]/10 border border-[#F59E0B]/30">
+              <img src={RPS_CHOICES.rock.image} alt="Búa" className="w-5 h-5 sm:w-6 sm:h-6 object-contain shrink-0" />
+              <div className="flex flex-col min-w-0">
+                <span className="text-[#F59E0B] text-[9px] sm:text-[10px] font-black leading-tight">BÚA ✊</span>
+                <span className="text-[8px] text-white/50 leading-none truncate">Đập Kéo</span>
               </div>
-              <b className="text-white text-xs sm:text-sm font-black mt-0.5">5 Lượt Đấu Chung Cuộc</b>
-              <span className="text-[10px] text-[#00D89A] font-bold">Nghỉ 5s cho người chơi 2</span>
+            </div>
+
+            <div className="flex items-center gap-1.5 px-1.5 py-1 rounded-lg bg-[#EF4444]/10 border border-[#EF4444]/30">
+              <img src={RPS_CHOICES.scissors.image} alt="Kéo" className="w-5 h-5 sm:w-6 sm:h-6 object-contain shrink-0" />
+              <div className="flex flex-col min-w-0">
+                <span className="text-[#EF4444] text-[9px] sm:text-[10px] font-black leading-tight">KÉO ✌️</span>
+                <span className="text-[8px] text-white/50 leading-none truncate">Cắt Bao</span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-1.5 px-1.5 py-1 rounded-lg bg-[#10B981]/10 border border-[#10B981]/30">
+              <img src={RPS_CHOICES.paper.image} alt="Bao" className="w-5 h-5 sm:w-6 sm:h-6 object-contain shrink-0" />
+              <div className="flex flex-col min-w-0">
+                <span className="text-[#10B981] text-[9px] sm:text-[10px] font-black leading-tight">BAO ✋</span>
+                <span className="text-[8px] text-white/50 leading-none truncate">Bọc Búa</span>
+              </div>
+            </div>
+          </div>
+
+          {/* 2 Vòng đấu Strip */}
+          <div className="grid grid-cols-2 gap-1.5 text-xs">
+            <div className="p-1.5 rounded-xl bg-[#38BDF8]/10 border border-[#38BDF8]/30 flex items-center justify-between">
+              <div className="flex flex-col">
+                <span className="text-[#38BDF8] font-black uppercase text-[8px] tracking-wider">VÒNG 1: KHỞI ĐỘNG</span>
+                <b className="text-white text-[10px] sm:text-[11px] font-black leading-tight">5 Lượt Đấu Đầu</b>
+              </div>
+              <span className="text-[8px] sm:text-[9px] text-white/50">Lượt 1..5</span>
+            </div>
+
+            <div className="p-1.5 rounded-xl bg-[#00D89A]/10 border border-[#00D89A]/30 flex items-center justify-between">
+              <div className="flex flex-col">
+                <span className="text-[#00D89A] font-black uppercase text-[8px] tracking-wider">VÒNG 2: TĂNG TỐC 🔥</span>
+                <b className="text-white text-[10px] sm:text-[11px] font-black leading-tight">5 Lượt Chung Cuộc</b>
+              </div>
+              <span className="text-[8px] sm:text-[9px] text-[#00D89A] font-bold">Nghỉ 5s</span>
             </div>
           </div>
 
           {/* Player / Group Info Card */}
-          <div className="p-2.5 sm:p-3 rounded-2xl bg-gradient-to-r from-[#121c42]/90 to-[#0c1635]/90 border border-[#4C6DF0]/40 shadow-lg flex items-center justify-between gap-3">
-            <div className="flex items-center gap-2.5">
-              <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-[#4C6DF0]/30 to-[#00D89A]/30 border border-[#00D89A]/60 flex items-center justify-center p-0.5 shadow-md shrink-0">
+          <div className="p-1.5 sm:p-2 rounded-xl bg-gradient-to-r from-[#121c42]/90 to-[#0c1635]/90 border border-[#4C6DF0]/40 shadow-md flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2 min-w-0">
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-br from-[#4C6DF0]/30 to-[#00D89A]/30 border border-[#00D89A]/60 flex items-center justify-center p-0.5 shadow-sm shrink-0">
                 <CharacterAvatar character={character} />
               </div>
-              <div className="flex flex-col">
-                <span className="text-[9px] font-bold text-white/50 uppercase tracking-wider">
+              <div className="flex flex-col min-w-0">
+                <span className="text-[8px] font-bold text-white/50 uppercase tracking-wider">
                   Đội thi đấu
                 </span>
-                <span className="text-xs sm:text-sm font-black text-white">{profile.groupName}</span>
-                <span className="text-[10px] text-[#00D89A] font-semibold">
+                <span className="text-xs sm:text-sm font-black text-white truncate">{profile.groupName}</span>
+                <span className="text-[9px] text-[#00D89A] font-semibold">
                   Lớp: {profile.className}
                 </span>
               </div>
@@ -105,7 +132,7 @@ export function Intro({ profile, difficulty, onSelectDifficulty, onOpenSetup, on
             <button
               type="button"
               onClick={onOpenSetup}
-              className="min-h-[34px] px-3 py-1 rounded-xl bg-[#4C6DF0]/25 hover:bg-[#4C6DF0]/40 border border-[#4C6DF0]/60 text-white text-[11px] font-black transition-all cursor-pointer flex items-center gap-1 shrink-0"
+              className="min-h-[26px] px-2.5 py-0.5 rounded-lg bg-[#4C6DF0]/25 hover:bg-[#4C6DF0]/40 border border-[#4C6DF0]/60 text-white text-[10px] font-black transition-all cursor-pointer flex items-center gap-1 shrink-0"
             >
               <span>✏️</span>
               <span>Đổi</span>
@@ -113,12 +140,12 @@ export function Intro({ profile, difficulty, onSelectDifficulty, onOpenSetup, on
           </div>
 
           {/* Lựa chọn độ khó AI */}
-          <div className="flex flex-col gap-1 p-2 rounded-2xl bg-white/5 border border-white/10">
+          <div className="flex flex-col gap-1 p-1.5 sm:p-2 rounded-xl bg-white/5 border border-white/10">
             <div className="flex items-center justify-between px-1">
-              <span className="text-[10px] font-black uppercase text-white/60 tracking-wider">
+              <span className="text-[9px] font-black uppercase text-white/60 tracking-wider">
                 🤖 Độ khó AI Thích Nghi (10 lượt)
               </span>
-              <span className="text-[10px] font-bold text-[#00D89A]">
+              <span className="text-[9px] font-bold text-[#00D89A]">
                 {difficulty === 'hard' ? 'Thử thách cao' : difficulty === 'easy' ? 'Thử nghiệm nhẹ' : 'Cân bằng'}
               </span>
             </div>
@@ -137,14 +164,14 @@ export function Intro({ profile, difficulty, onSelectDifficulty, onOpenSetup, on
                     key={opt.id}
                     type="button"
                     onClick={() => onSelectDifficulty(opt.id)}
-                    className={`p-1.5 rounded-xl border-2 text-center transition-colors cursor-pointer flex flex-col items-center justify-center ${
+                    className={`p-1 sm:p-1.5 rounded-lg border-2 text-center transition-colors cursor-pointer flex flex-col items-center justify-center ${
                       isSelected
-                        ? `${opt.color} shadow-lg font-black`
+                        ? `${opt.color} shadow-md font-black`
                         : 'border-white/10 bg-black/30 text-white/50 hover:text-white/80 hover:bg-white/5 font-semibold'
                     }`}
                   >
-                    <span className="text-[11px] uppercase tracking-wider">{opt.label}</span>
-                    <span className="text-[8px] leading-tight opacity-75">{opt.desc}</span>
+                    <span className="text-[10px] sm:text-[11px] uppercase tracking-wider">{opt.label}</span>
+                    <span className="text-[7.5px] sm:text-[8px] leading-tight opacity-75">{opt.desc}</span>
                   </button>
                 );
               })}
@@ -152,62 +179,62 @@ export function Intro({ profile, difficulty, onSelectDifficulty, onOpenSetup, on
           </div>
 
           {/* Action button - Chơi thuần AR */}
-          <div className="pt-1">
+          <div className="pt-0.5">
             <button
               type="button"
               onClick={onStart}
-              className="w-full min-h-[48px] px-6 py-3 rounded-2xl bg-gradient-to-r from-[#00D89A] via-[#10B981] to-[#059669] text-[#022318] hover:shadow-[0_0_35px_rgba(0,216,154,0.7)] font-black text-sm uppercase tracking-wider transition-all transform hover:scale-[1.02] active:scale-[0.98] cursor-pointer flex items-center justify-center gap-2 shadow-lg"
+              className="w-full min-h-[42px] sm:min-h-[46px] px-4 py-2 sm:py-2.5 rounded-xl bg-gradient-to-r from-[#00D89A] via-[#10B981] to-[#059669] text-[#022318] hover:shadow-[0_0_30px_rgba(0,216,154,0.7)] font-black text-xs sm:text-sm uppercase tracking-wider transition-all transform hover:scale-[1.01] active:scale-[0.99] cursor-pointer flex items-center justify-center gap-2 shadow-lg"
             >
-              <span className="text-xl">🖐️</span>
-              <span>BẮT ĐẦU ĐẤU OẲN TÙ XÌ (CAMERA AR)</span>
+              <span className="text-base sm:text-lg">🖐️</span>
+              <span>BẮT ĐẦU ĐẤU OẲN TÙ XÌ (AR CAMERA)</span>
               <span>➔</span>
             </button>
           </div>
         </div>
 
-        {/* Right Preview Card: 3 Chiêu Thức Oẳn Tù Xì */}
-        <div className="flex flex-col items-center justify-center gap-3 p-4 sm:p-5 rounded-3xl bg-[#09112a]/85 border border-white/10 shadow-xl max-w-sm w-full animate-slide-right">
+        {/* Right Preview Card: Chỉ hiển thị trên màn hình rộng Desktop (lg:) để không làm tràn màn hình Mobile */}
+        <div className="hidden lg:flex flex-col items-center justify-center gap-3 p-4 rounded-2xl bg-[#09112a]/85 border border-white/10 shadow-xl max-w-xs w-full animate-slide-right shrink-0">
           <div className="flex items-center gap-1.5 text-white/70 text-xs font-black uppercase tracking-wider">
             <span>🎯</span>
-            <span>3 Dạng Ra Chiêu Bằng Tay</span>
+            <span>Quy Ước Ra Chiêu</span>
           </div>
 
           <div className="grid grid-cols-3 gap-2 w-full">
-            <div className="flex flex-col items-center p-2 rounded-2xl bg-[#F59E0B]/10 border border-[#F59E0B]/40">
-              <img src={RPS_CHOICES.rock.image} alt="Búa" className="w-12 h-12 sm:w-14 sm:h-14 object-contain" />
+            <div className="flex flex-col items-center p-2 rounded-xl bg-[#F59E0B]/10 border border-[#F59E0B]/40">
+              <img src={RPS_CHOICES.rock.image} alt="Búa" className="w-12 h-12 object-contain" />
               <span className="text-[#F59E0B] text-xs font-black mt-1">BÚA (✊)</span>
               <span className="text-[9px] text-white/50">Đập Kéo</span>
             </div>
 
-            <div className="flex flex-col items-center p-2 rounded-2xl bg-[#EF4444]/10 border border-[#EF4444]/40">
-              <img src={RPS_CHOICES.scissors.image} alt="Kéo" className="w-12 h-12 sm:w-14 sm:h-14 object-contain" />
+            <div className="flex flex-col items-center p-2 rounded-xl bg-[#EF4444]/10 border border-[#EF4444]/40">
+              <img src={RPS_CHOICES.scissors.image} alt="Kéo" className="w-12 h-12 object-contain" />
               <span className="text-[#EF4444] text-xs font-black mt-1">KÉO (✌️)</span>
               <span className="text-[9px] text-white/50">Cắt Bao</span>
             </div>
 
-            <div className="flex flex-col items-center p-2 rounded-2xl bg-[#10B981]/10 border border-[#10B981]/40">
-              <img src={RPS_CHOICES.paper.image} alt="Bao" className="w-12 h-12 sm:w-14 sm:h-14 object-contain" />
+            <div className="flex flex-col items-center p-2 rounded-xl bg-[#10B981]/10 border border-[#10B981]/40">
+              <img src={RPS_CHOICES.paper.image} alt="Bao" className="w-12 h-12 object-contain" />
               <span className="text-[#10B981] text-xs font-black mt-1">BAO (✋)</span>
               <span className="text-[9px] text-white/50">Bọc Búa</span>
             </div>
           </div>
 
-          <p className="text-[11px] text-white/70 text-center leading-relaxed">
+          <p className="text-[10px] text-white/70 text-center leading-relaxed">
             💡 <b>Quy tắc chơi:</b> Sử dụng <b>1 bàn tay duy nhất</b>. Trong 3s đếm ngược <i>Oẳn - Tù - Xì</i>, điều chỉnh thế tay chuẩn xác và giữ nguyên khi hết giờ!
           </p>
         </div>
       </main>
 
       {/* Footer Steps */}
-      <footer className="py-1.5 border-t border-white/10 flex flex-wrap items-center justify-between gap-2 text-[10px] text-white/50 shrink-0 animate-slide-bottom">
-        <div className="flex items-center gap-2">
-          <span><b>01</b> Đếm ngược 3s (Oẳn - Tù - Xì)</span>
+      <footer className="py-1 border-t border-white/10 flex items-center justify-between gap-2 text-[9px] text-white/40 shrink-0 animate-slide-bottom">
+        <div className="flex items-center gap-1.5 truncate">
+          <span><b>01</b> Đếm nhịp 3s</span>
           <i>›</i>
-          <span><b>02</b> Ra chiêu tay sau cùng</span>
+          <span><b>02</b> Khóa thế tay</span>
           <i>›</i>
-          <span><b>03</b> So tài thắng bại với AI (10 lượt)</span>
+          <span><b>03</b> So tài 10 lượt</span>
         </div>
-        <div className="text-[#00D89A] font-bold">Oẳn Tù Xì AR · Manabie AI Lab</div>
+        <div className="text-[#00D89A] font-bold shrink-0">Oẳn Tù Xì AR · Manabie Lab</div>
       </footer>
     </div>
   );

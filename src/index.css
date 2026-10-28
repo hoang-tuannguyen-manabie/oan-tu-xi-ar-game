@@ -2109,7 +2109,7 @@ button {
   position: relative;
   isolation: isolate;
   min-height: 100%;
-  overflow: auto;
+  overflow: hidden;
   color: var(--chalk);
   background: #050a1d;
 }

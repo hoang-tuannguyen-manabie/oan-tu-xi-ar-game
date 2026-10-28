@@ -334,8 +334,8 @@ export function Game({ profile, demoMode, difficulty = 'normal', onGameOver, onS
       {/* ============================================================ */}
       <div className="absolute inset-0 z-20 flex flex-col justify-between p-2.5 sm:p-4 pointer-events-none">
         {/* Top Battle Info Bar + 10-Round Status Bar */}
-        <div className="flex flex-col gap-2 max-w-5xl mx-auto w-full">
-          <div className="flex items-center justify-between gap-2 w-full">
+        <div className="flex flex-col gap-1.5 sm:gap-2 max-w-5xl mx-auto w-full">
+          <div className="hidden md:flex items-center justify-between gap-2 w-full">
             {/* Player Card */}
             <div className="flex items-center gap-2 sm:gap-2.5 p-2 sm:p-2.5 rounded-2xl bg-[#08122c]/85 border border-[#38BDF8]/40 shadow-lg backdrop-blur-md">
               <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-[#4C6DF0]/30 to-[#00D89A]/30 border border-[#00D89A] p-0.5 shrink-0">
@@ -387,20 +387,20 @@ export function Game({ profile, demoMode, difficulty = 'normal', onGameOver, onS
         </div>
 
         {/* Center Arena Clash Zone: Bên Người vs Bên Máy */}
-        <div className="my-auto max-w-4xl mx-auto w-full flex items-center justify-between gap-3 sm:gap-6 px-2">
+        <div className="my-auto max-w-4xl mx-auto w-full flex items-center justify-between gap-1.5 sm:gap-6 px-1 sm:px-2">
           {/* ======================================================== */}
           {/* 1. BÊN NGƯỜI (Player Side - Nhận diện AR thời gian thực) */}
           {/* ======================================================== */}
           <div className="flex-1 flex flex-col items-center">
-            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/60 border border-[#38BDF8]/40 mb-2 backdrop-blur-md">
-              <span className="text-[10px] sm:text-xs font-black uppercase text-[#38BDF8] tracking-wider">
-                🖐️ BẠN (AR CAMERA)
+            <div className="flex items-center gap-1.5 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full bg-black/60 border border-[#38BDF8]/40 mb-1 sm:mb-2 backdrop-blur-md">
+              <span className="text-[9px] sm:text-xs font-black uppercase text-[#38BDF8] tracking-wider truncate">
+                🖐️ BẠN (AR)
               </span>
             </div>
 
             {/* Khung hiển thị chiêu thức: Lắc lên xuống nhẹ (animate-rps-bob-player) */}
             <div
-              className={`relative w-28 h-36 sm:w-48 sm:h-56 rounded-3xl p-3 flex flex-col items-center justify-center border-2 transition-all duration-200 ${
+              className={`relative w-24 h-32 xs:w-28 xs:h-36 sm:w-44 sm:h-52 rounded-2xl sm:rounded-3xl p-2 sm:p-3 flex flex-col items-center justify-center border-2 transition-all duration-200 ${
                 activePlayerGesture
                   ? 'animate-rps-bob-player shadow-2xl backdrop-blur-md'
                   : 'border-dashed border-white/20 bg-white/5 animate-pulse'
@@ -422,19 +422,19 @@ export function Game({ profile, demoMode, difficulty = 'normal', onGameOver, onS
                   <img
                     src={RPS_CHOICES[activePlayerGesture].image}
                     alt={activePlayerGesture}
-                    className="w-20 h-20 sm:w-32 sm:h-32 object-contain filter drop-shadow-[0_8px_16px_rgba(0,0,0,0.5)] transform -scale-x-100"
+                    className="w-14 h-14 xs:w-16 xs:h-16 sm:w-28 sm:h-28 object-contain filter drop-shadow-[0_8px_16px_rgba(0,0,0,0.5)] transform -scale-x-100"
                   />
-                  <span className="text-xs sm:text-base font-black text-white mt-1 uppercase tracking-wider">
+                  <span className="text-[11px] sm:text-base font-black text-white mt-1 uppercase tracking-wider">
                     {RPS_CHOICES[activePlayerGesture].emoji} {RPS_CHOICES[activePlayerGesture].vietnameseName}
                   </span>
-                  <span className="text-[9px] text-[#00D89A] font-bold">✓ Nhận diện bàn tay</span>
+                  <span className="text-[8px] sm:text-[9px] text-[#00D89A] font-bold">✓ Nhận diện tay</span>
                 </>
               ) : (
-                <div className="flex flex-col items-center text-center p-2">
-                  <span className="text-3xl sm:text-5xl opacity-40 mb-1">✋</span>
-                  <span className="text-[10px] sm:text-xs font-bold text-white/60 leading-tight">
-                    Giơ 1 tay trước camera<br />
-                    (✊ Búa / ✌️ Kéo / ✋ Bao)
+                <div className="flex flex-col items-center text-center p-1 sm:p-2">
+                  <span className="text-2xl sm:text-5xl opacity-40 mb-1">✋</span>
+                  <span className="text-[9px] sm:text-xs font-bold text-white/60 leading-tight">
+                    Giơ 1 tay trước cam<br />
+                    (✊ / ✌️ / ✋)
                   </span>
                 </div>
               )}
@@ -444,36 +444,36 @@ export function Game({ profile, demoMode, difficulty = 'normal', onGameOver, onS
           {/* ======================================================== */}
           {/* 2. KHU VỰC TRUNG TÂM (Chant OẲN - TÙ - XÌ & Kết quả)      */}
           {/* ======================================================== */}
-          <div className="shrink-0 flex flex-col items-center justify-center text-center min-w-[130px] sm:min-w-[190px]">
+          <div className="shrink-0 flex flex-col items-center justify-center text-center min-w-[90px] xs:min-w-[110px] sm:min-w-[170px]">
             {currentPhase === 'COUNTDOWN' && (
               <div className="flex flex-col items-center justify-center">
-                <span className="text-[10px] sm:text-xs font-black tracking-widest text-white/50 uppercase mb-1">
+                <span className="text-[9px] sm:text-xs font-black tracking-widest text-white/50 uppercase mb-0.5">
                   ĐẾM NHỊP
                 </span>
 
                 {/* Chữ OẲN - TÙ - XÌ to nổi bật */}
                 <div
-                  className={`font-black font-mono leading-none tracking-wider text-5xl sm:text-8xl drop-shadow-[0_0_35px_rgba(245,158,11,0.8)] transition-all duration-150 ${
+                  className={`font-black font-mono leading-none tracking-wider text-4xl xs:text-5xl sm:text-7xl drop-shadow-[0_0_35px_rgba(245,158,11,0.8)] transition-all duration-150 ${
                     chantWord === 'OẲN'
                       ? 'text-[#F59E0B] scale-100'
                       : chantWord === 'TÙ'
-                      ? 'text-[#38BDF8] scale-110'
-                      : 'text-[#EF4444] scale-125'
+                      ? 'text-[#38BDF8] scale-105'
+                      : 'text-[#EF4444] scale-115'
                   }`}
                 >
                   {chantWord}
                 </div>
 
-                <div className="mt-2 text-[10px] sm:text-xs font-bold text-white/70 font-mono">
+                <div className="mt-1 sm:mt-2 text-[9px] sm:text-xs font-bold text-white/70 font-mono">
                   {Math.max(0, engineState?.countdownSeconds || 0).toFixed(1)}s
                 </div>
               </div>
             )}
 
             {currentPhase === 'SHOWDOWN' && (
-              <div className="flex flex-col items-center gap-2 animate-banner-pop">
+              <div className="flex flex-col items-center gap-1 sm:gap-2 animate-banner-pop">
                 <span
-                  className={`px-3.5 py-1 rounded-full text-xs sm:text-sm font-black uppercase tracking-wider ${
+                  className={`px-2.5 py-0.5 sm:px-3.5 sm:py-1 rounded-full text-[10px] sm:text-sm font-black uppercase tracking-wider ${
                     engineState?.lastResult === 'win'
                       ? 'bg-[#10B981] text-[#022318] shadow-[0_0_20px_rgba(16,185,129,0.7)]'
                       : engineState?.lastResult === 'draw'
@@ -483,20 +483,20 @@ export function Game({ profile, demoMode, difficulty = 'normal', onGameOver, onS
                 >
                   {engineState?.resultMessage}
                 </span>
-                <span className="text-xl sm:text-3xl font-black font-mono text-white/40 italic">VS</span>
-                <span className="text-[11px] sm:text-xs text-white/90 font-bold max-w-[170px] leading-tight">
+                <span className="text-base sm:text-2xl font-black font-mono text-white/40 italic">VS</span>
+                <span className="text-[9px] sm:text-xs text-white/90 font-bold max-w-[130px] sm:max-w-[170px] leading-tight">
                   {engineState?.resultDetail}
                 </span>
               </div>
             )}
 
             {currentPhase === 'ROUND_GAP' && (
-              <div className="flex flex-col items-center gap-1.5 p-3 rounded-2xl bg-[#09153a]/95 border-2 border-[#00D89A] shadow-[0_0_40px_rgba(0,216,154,0.4)] animate-modal-dialog">
-                <span className="text-[9px] font-black uppercase text-[#00D89A]">NGHỈ CHUYỂN VÒNG</span>
-                <span className="text-3xl sm:text-5xl font-black font-mono text-[#00D89A] animate-pulse">
+              <div className="flex flex-col items-center gap-1 p-2 sm:p-3 rounded-2xl bg-[#09153a]/95 border-2 border-[#00D89A] shadow-[0_0_40px_rgba(0,216,154,0.4)] animate-modal-dialog">
+                <span className="text-[8px] sm:text-[9px] font-black uppercase text-[#00D89A]">NGHỈ CHUYỂN VÒNG</span>
+                <span className="text-2xl sm:text-4xl font-black font-mono text-[#00D89A] animate-pulse">
                   {gapCountdown}s
                 </span>
-                <span className="text-[10px] text-white/80 font-bold">Người chơi 2 chuẩn bị</span>
+                <span className="text-[9px] text-white/80 font-bold">Người chơi 2 chuẩn bị</span>
               </div>
             )}
           </div>
@@ -505,12 +505,12 @@ export function Game({ profile, demoMode, difficulty = 'normal', onGameOver, onS
           {/* 3. BÊN MÁY (AI Side - Nhảy random trong lúc đếm ngược)    */}
           {/* ======================================================== */}
           <div className="flex-1 flex flex-col items-center">
-            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/60 border border-[#EF4444]/40 mb-2 backdrop-blur-md">
-              <span className="text-[10px] sm:text-xs font-black uppercase text-[#EF4444] tracking-wider">
-                🤖 MANABIE AI
+            <div className="flex items-center gap-1 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full bg-black/60 border border-[#EF4444]/40 mb-1 sm:mb-2 backdrop-blur-md">
+              <span className="text-[9px] sm:text-xs font-black uppercase text-[#EF4444] tracking-wider truncate">
+                🤖 AI
               </span>
               <span
-                className={`px-1.5 py-0.2 rounded text-[9px] font-black uppercase tracking-wider ${
+                className={`px-1 py-0.2 rounded text-[8px] sm:text-[9px] font-black uppercase tracking-wider ${
                   (engineState?.difficulty || difficulty) === 'hard'
                     ? 'bg-rose-500/25 border border-rose-500/50 text-rose-300'
                     : (engineState?.difficulty || difficulty) === 'easy'
@@ -527,14 +527,14 @@ export function Game({ profile, demoMode, difficulty = 'normal', onGameOver, onS
             </div>
 
             {/* AI Status Label - Trừu tượng hóa quá trình học */}
-            <div className="mb-1 text-[10px] text-white/60 font-semibold tracking-wide flex items-center gap-1">
-              <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#38BDF8] animate-ping" />
-              <span>{engineState?.aiStatusLabel || 'Đang quan sát'}</span>
+            <div className="mb-0.5 sm:mb-1 text-[9px] text-white/60 font-semibold tracking-wide flex items-center gap-1 truncate max-w-[120px]">
+              <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#38BDF8]" />
+              <span className="truncate">{engineState?.aiStatusLabel || 'Quan sát'}</span>
             </div>
 
             {/* Khung hiển thị chiêu thức máy: Lắc lên xuống nhẹ (animate-rps-bob-ai) */}
             <div
-              className={`relative w-28 h-36 sm:w-48 sm:h-56 rounded-3xl p-3 flex flex-col items-center justify-center border-2 transition-all duration-200 animate-rps-bob-ai shadow-2xl backdrop-blur-md`}
+              className={`relative w-24 h-32 xs:w-28 xs:h-36 sm:w-44 sm:h-52 rounded-2xl sm:rounded-3xl p-2 sm:p-3 flex flex-col items-center justify-center border-2 transition-all duration-200 animate-rps-bob-ai shadow-2xl backdrop-blur-md`}
               style={{
                 borderColor: RPS_CHOICES[activeAIChoice].borderColor,
                 backgroundColor: RPS_CHOICES[activeAIChoice].bgColor,
@@ -544,15 +544,15 @@ export function Game({ profile, demoMode, difficulty = 'normal', onGameOver, onS
               <img
                 src={RPS_CHOICES[activeAIChoice].image}
                 alt={activeAIChoice}
-                className="w-20 h-20 sm:w-32 sm:h-32 object-contain filter drop-shadow-[0_8px_16px_rgba(0,0,0,0.5)]"
+                className="w-14 h-14 xs:w-16 xs:h-16 sm:w-28 sm:h-28 object-contain filter drop-shadow-[0_8px_16px_rgba(0,0,0,0.5)]"
               />
-              <span className="text-xs sm:text-base font-black text-white mt-1 uppercase tracking-wider">
+              <span className="text-[11px] sm:text-base font-black text-white mt-1 uppercase tracking-wider">
                 {currentPhase === 'SHOWDOWN'
                   ? `${RPS_CHOICES[activeAIChoice].emoji} ${RPS_CHOICES[activeAIChoice].vietnameseName}`
                   : '🎲 ĐANG CHỌN...'}
               </span>
-              <span className="text-[9px] text-[#F59E0B] font-bold">
-                {currentPhase === 'SHOWDOWN' ? '✓ Chiêu thức đã chốt' : '⚡ Nhảy ngẫu nhiên'}
+              <span className="text-[8px] sm:text-[9px] text-[#F59E0B] font-bold">
+                {currentPhase === 'SHOWDOWN' ? '✓ Đã chốt' : '⚡ Random'}
               </span>
             </div>
           </div>
@@ -560,13 +560,13 @@ export function Game({ profile, demoMode, difficulty = 'normal', onGameOver, onS
 
         {/* Bottom Mascot Coach Guide - Chơi thuần AR */}
         <div className="max-w-5xl mx-auto w-full flex items-center justify-center">
-          <div className="flex items-center gap-3 px-4 py-2 rounded-2xl bg-black/70 border border-white/10 backdrop-blur-md max-w-lg">
-            <img className="w-9 h-9 sm:w-11 sm:h-11 object-contain shrink-0" src={BRAND_MASCOTS.explore} alt="" />
+          <div className="flex items-center gap-2 sm:gap-3 px-3 py-1.5 sm:px-4 sm:py-2 rounded-2xl bg-black/70 border border-white/10 backdrop-blur-md max-w-md">
+            <img className="w-7 h-7 sm:w-9 sm:h-9 object-contain shrink-0" src={BRAND_MASCOTS.explore} alt="" />
             <div className="flex flex-col text-left">
-              <span className="text-[10px] font-bold text-[#00D89A] uppercase tracking-wider">
+              <span className="text-[9px] font-bold text-[#00D89A] uppercase tracking-wider">
                 Quy Tắc Oẳn Tù Xì AR (1 Bàn Tay)
               </span>
-              <p className="text-[11px] sm:text-xs text-white/80 leading-snug">
+              <p className="text-[10px] sm:text-xs text-white/80 leading-snug">
                 ✊ <b>Búa đập Kéo</b> • ✌️ <b>Kéo cắt Bao</b> • ✋ <b>Bao bọc Búa</b>
               </p>
             </div>
