@@ -56,6 +56,7 @@ export interface GameState {
   chantWord: 'OẲN' | 'TÙ' | 'XÌ' | '';
   gapCountdown: number; // 5s gap giữa vòng 1 và vòng 2
   liveGesture: RPSChoice | null; // Cử chỉ tay người chơi theo thời gian thực (AR)
+  isHandMissing: boolean; // Tạm dừng game khi không phát hiện bàn tay trước camera
   shufflingAIChoice: RPSChoice; // Chiêu của AI nhảy ngẫu nhiên trong lúc đếm ngược
   playerChoice: RPSChoice | null;
   aiChoice: RPSChoice | null;
@@ -102,6 +103,7 @@ export class GameEngine {
     chantWord: '',
     gapCountdown: 5,
     liveGesture: null,
+    isHandMissing: false,
     shufflingAIChoice: 'rock',
     playerChoice: null,
     aiChoice: null,
@@ -123,6 +125,7 @@ export class GameEngine {
   private liveGestureLabel: string = 'Đang nhận diện...';
   private phaseTimer: number = 0;
   private aiShuffleTimer: number = 0;
+  private noHandElapsedMs: number = 0;
   private lastChantPlayed: string = '';
   private shockwaves: Array<{ x: number; y: number; r: number; color: string; life: number; age: number }> = [];
   private particles: Array<{ x: number; y: number; vx: number; vy: number; color: string; size: number; alpha: number }> = [];
@@ -175,9 +178,12 @@ export class GameEngine {
   // Cập nhật tọa độ bàn tay từ MediaPipe
   updateHand(landmarks: LandmarkPoint[] | null) {
     this.currentLandmarks = landmarks;
-    this.state.handsVisible = landmarks && landmarks.length >= 21 ? 1 : 0;
+    const hasHand = !!(landmarks && landmarks.length >= 21);
+    this.state.handsVisible = hasHand ? 1 : 0;
 
-    if (landmarks && landmarks.length >= 21) {
+    if (hasHand) {
+      this.noHandElapsedMs = 0;
+      this.state.isHandMissing = false;
       const detected = detectRPSGesture(landmarks);
       this.liveGesture = detected.choice;
       this.liveGestureLabel = detected.label;
@@ -207,6 +213,8 @@ export class GameEngine {
     this.state.countdownSeconds = 3.0;
     this.state.chantWord = 'OẲN';
     this.state.playerChoice = null;
+    this.noHandElapsedMs = 0;
+    this.state.isHandMissing = false;
     this.state.aiChoice = null;
     this.state.aiStatus = 'analyzing';
 
@@ -239,6 +247,24 @@ export class GameEngine {
     this.updateVFX(dt);
 
     if (this.state.phase === 'COUNTDOWN') {
+      // 1. NẾU KHÔNG CÓ BÀN TAY TRONG CAMERA: TẠM DỪNG GAME & BẬT POPUP NHẮC NHỞ
+      if (this.state.handsVisible === 0) {
+        this.noHandElapsedMs += dtMs;
+        if (this.noHandElapsedMs >= 250) {
+          if (!this.state.isHandMissing) {
+            this.state.isHandMissing = true;
+            this.onStateChange({ ...this.state });
+          }
+          return; // TẠM DỪNG: Không trừ thời gian, giữ nguyên nhịp hô!
+        }
+      } else {
+        this.noHandElapsedMs = 0;
+        if (this.state.isHandMissing) {
+          this.state.isHandMissing = false;
+          this.onStateChange({ ...this.state });
+        }
+      }
+
       this.state.countdownSeconds -= dt;
 
       // Nhảy random ảnh chiêu thức bên máy liên tục trong lúc đếm ngược

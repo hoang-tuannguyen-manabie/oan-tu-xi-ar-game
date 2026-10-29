@@ -49,7 +49,7 @@ export function Debrief({
       </header>
 
       {/* Main debrief content: Gọn gàng tuyệt đối, KHÔNG SCROLL */}
-      <main className="my-auto py-1 max-w-2xl mx-auto w-full flex flex-col items-center gap-1.5 sm:gap-2 shrink overflow-hidden">
+      <main className="my-auto py-1 max-w-4xl mx-auto w-full flex flex-col items-center gap-1.5 sm:gap-2 shrink overflow-hidden">
         {/* Victory Banner (Sleek & Compact) */}
         <div
           className={`w-full p-2 sm:p-2.5 rounded-2xl border flex items-center justify-between gap-3 relative overflow-hidden animate-banner-pop shrink-0 ${
@@ -62,7 +62,7 @@ export function Debrief({
         >
           <div className="flex items-center gap-2.5 min-w-0">
             <div className="relative shrink-0">
-              <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl border-2 border-white/20 bg-white/5 overflow-hidden flex items-center justify-center shadow-md">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl border-2 border-white/20 bg-white/5 overflow-hidden flex items-center justify-center shadow-md">
                 <CharacterAvatar character={character} className="w-full h-full" />
               </div>
               <div className="absolute -bottom-1 -right-1 text-sm sm:text-base">
@@ -96,7 +96,7 @@ export function Debrief({
 
           <div className="flex flex-col items-end shrink-0 pl-2.5 border-l border-white/10">
             <span className="text-[8px] font-bold text-white/50 uppercase">Tổng điểm</span>
-            <span className="text-xl sm:text-2xl font-black font-mono text-[#00D89A] leading-tight">
+            <span className="text-2xl sm:text-4xl font-black font-mono text-[#00D89A] leading-tight">
               {state.score}
             </span>
           </div>
@@ -106,7 +106,7 @@ export function Debrief({
         <div className="grid grid-cols-4 gap-1.5 sm:gap-2 w-full shrink-0 animate-slide-bottom">
           <div className="p-1.5 rounded-xl bg-white/5 border border-white/10 flex flex-col items-center">
             <span className="text-[8px] sm:text-[9px] font-bold text-white/50 uppercase">Thắng</span>
-            <b className="text-sm sm:text-base font-black font-mono text-[#10B981]">{state.totalWins}</b>
+            <b className="text-base sm:text-xl font-black font-mono text-[#10B981]">{state.totalWins}</b>
           </div>
           <div className="p-1.5 rounded-xl bg-white/5 border border-white/10 flex flex-col items-center">
             <span className="text-[8px] sm:text-[9px] font-bold text-white/50 uppercase">Hòa</span>

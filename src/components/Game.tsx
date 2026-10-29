@@ -359,13 +359,49 @@ export function Game({ profile, demoMode, difficulty = 'normal', onGameOver, onS
         autoPlay
         muted
         disablePictureInPicture
-        className={`absolute inset-0 w-full h-full -scale-x-100 object-cover opacity-25 mix-blend-screen pointer-events-none ${
+        className={`absolute inset-0 w-full h-full -scale-x-100 object-cover opacity-40 mix-blend-screen pointer-events-none ${
           cameraReady ? '' : 'hidden'
         }`}
       />
 
       {/* Main Canvas rendering AR Hand Skeleton & VFX */}
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none z-10" />
+
+      {/* ============================================================ */}
+      {/* POPUP: TẠM DỪNG KHI KHÔNG PHÁT HIỆN BÀN TAY                   */}
+      {/* ============================================================ */}
+      {engineState?.isHandMissing && currentPhase === 'COUNTDOWN' && (
+        <div className="absolute inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md animate-modal-dialog pointer-events-auto">
+          <div className="relative max-w-lg w-full p-5 sm:p-7 rounded-3xl bg-gradient-to-b from-[#0f1d46] to-[#070e24] border-2 border-[#38BDF8] shadow-[0_0_50px_rgba(56,189,248,0.4)] flex flex-col items-center text-center gap-3 sm:gap-4 overflow-hidden">
+            {/* Glowing Icon Hand with ripple */}
+            <div className="relative flex items-center justify-center">
+              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-[#38BDF8]/20 border-2 border-[#38BDF8] flex items-center justify-center shadow-[0_0_30px_rgba(56,189,248,0.5)] animate-pulse">
+                <span className="text-4xl sm:text-5xl transform -rotate-12 select-none">🖐️</span>
+              </div>
+              <span className="absolute inset-0 rounded-full border border-[#00D89A] animate-ping opacity-75" />
+            </div>
+
+            {/* Yêu cầu: "Em hãy đưa tay trước camera để chơi" */}
+            <div className="flex flex-col gap-1.5">
+              <span className="px-3 py-0.5 rounded-full bg-[#F59E0B]/20 border border-[#F59E0B]/50 text-[#F59E0B] text-xs font-black uppercase tracking-wider mx-auto">
+                ⏸️ TRẬN ĐẤU ĐANG TẠM DỪNG
+              </span>
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-white leading-tight mt-1">
+                Em hãy đưa tay trước camera để chơi
+              </h2>
+              <p className="text-xs sm:text-sm text-white/80 leading-relaxed max-w-sm mx-auto">
+                Giơ <b>1 bàn tay</b> (nắm ✊, xòe ✋, hoặc kéo ✌️) vào giữa khung hình camera. Trận đấu sẽ <b>tự động tiếp tục</b> ngay lập tức!
+              </p>
+            </div>
+
+            {/* Radar scanner badge */}
+            <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-white/5 border border-white/10 text-xs text-[#38BDF8] font-bold">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#38BDF8] animate-ping" />
+              <span>Đang quét tìm bàn tay của em...</span>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ============================================================ */}
       {/* ARENA INTERACTION LAYER                                      */}
@@ -425,7 +461,7 @@ export function Game({ profile, demoMode, difficulty = 'normal', onGameOver, onS
         </div>
 
         {/* Center Arena Clash Zone: Bên Người vs Bên Máy */}
-        <div className="my-auto max-w-4xl mx-auto w-full flex items-center justify-between gap-1.5 sm:gap-6 px-1 sm:px-2">
+        <div className="my-auto max-w-5xl lg:max-w-6xl mx-auto w-full flex items-center justify-between gap-2 sm:gap-6 md:gap-10 px-2 sm:px-4">
           {/* ======================================================== */}
           {/* 1. BÊN NGƯỜI (Player Side - Nhận diện AR thời gian thực) */}
           {/* ======================================================== */}
@@ -438,7 +474,7 @@ export function Game({ profile, demoMode, difficulty = 'normal', onGameOver, onS
 
             {/* Khung hiển thị chiêu thức: Lắc lên xuống nhẹ (animate-rps-bob-player) */}
             <div
-              className={`relative w-24 h-32 xs:w-28 xs:h-36 sm:w-36 sm:h-44 md:w-44 md:h-52 lg:w-48 lg:h-56 rounded-2xl sm:rounded-3xl p-2 sm:p-3 flex flex-col items-center justify-center border-2 transition-all duration-200 ${
+              className={`relative w-32 h-44 xs:w-36 xs:h-48 sm:w-48 sm:h-60 md:w-56 md:h-72 lg:w-64 lg:h-80 rounded-2xl sm:rounded-3xl p-3 sm:p-4 flex flex-col items-center justify-center border-2 transition-all duration-200 ${
                 activePlayerGesture
                   ? 'animate-rps-bob-player shadow-2xl backdrop-blur-md'
                   : 'border-dashed border-white/20 bg-white/5 animate-pulse'
@@ -460,9 +496,9 @@ export function Game({ profile, demoMode, difficulty = 'normal', onGameOver, onS
                   <img
                     src={RPS_CHOICES[activePlayerGesture].image}
                     alt={activePlayerGesture}
-                    className="w-14 h-14 xs:w-16 xs:h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 object-contain filter drop-shadow-[0_8px_16px_rgba(0,0,0,0.5)] transform -scale-x-100"
+                    className="w-20 h-20 xs:w-24 xs:h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 lg:w-44 lg:h-44 object-contain filter drop-shadow-[0_8px_16px_rgba(0,0,0,0.5)] transform -scale-x-100"
                   />
-                  <span className="text-[11px] sm:text-base font-black text-white mt-1 uppercase tracking-wider">
+                  <span className="text-xs xs:text-sm sm:text-lg md:text-xl lg:text-2xl font-black text-white mt-1 uppercase tracking-wider">
                     {RPS_CHOICES[activePlayerGesture].emoji} {RPS_CHOICES[activePlayerGesture].vietnameseName}
                   </span>
                   <span className="text-[8px] sm:text-[9px] text-[#00D89A] font-bold">✓ Nhận diện tay</span>
@@ -482,7 +518,7 @@ export function Game({ profile, demoMode, difficulty = 'normal', onGameOver, onS
           {/* ======================================================== */}
           {/* 2. KHU VỰC TRUNG TÂM (Chant OẲN - TÙ - XÌ & Kết quả)      */}
           {/* ======================================================== */}
-          <div className="shrink-0 flex flex-col items-center justify-center text-center min-w-[90px] xs:min-w-[110px] sm:min-w-[170px]">
+          <div className="shrink-0 flex flex-col items-center justify-center text-center min-w-[110px] xs:min-w-[140px] sm:min-w-[200px] md:min-w-[240px]">
             {currentPhase === 'COUNTDOWN' && (
               <div className="flex flex-col items-center justify-center">
                 <span className="text-[9px] sm:text-xs font-black tracking-widest text-white/50 uppercase mb-0.5">
@@ -491,7 +527,7 @@ export function Game({ profile, demoMode, difficulty = 'normal', onGameOver, onS
 
                 {/* Chữ OẲN - TÙ - XÌ to nổi bật */}
                 <div
-                  className={`font-black font-mono leading-none tracking-wider text-4xl xs:text-5xl sm:text-6xl md:text-7xl drop-shadow-[0_0_35px_rgba(245,158,11,0.8)] transition-all duration-150 ${
+                  className={`font-black font-mono leading-none tracking-wider text-5xl xs:text-6xl sm:text-7xl md:text-8xl lg:text-9xl drop-shadow-[0_0_45px_rgba(245,158,11,0.9)] transition-all duration-150 ${
                     chantWord === 'OẲN'
                       ? 'text-[#F59E0B] scale-100'
                       : chantWord === 'TÙ'
@@ -572,7 +608,7 @@ export function Game({ profile, demoMode, difficulty = 'normal', onGameOver, onS
 
             {/* Khung hiển thị chiêu thức máy: Lắc lên xuống nhẹ (animate-rps-bob-ai) */}
             <div
-              className={`relative w-24 h-32 xs:w-28 xs:h-36 sm:w-44 sm:h-52 rounded-2xl sm:rounded-3xl p-2 sm:p-3 flex flex-col items-center justify-center border-2 transition-all duration-200 animate-rps-bob-ai shadow-2xl backdrop-blur-md`}
+              className={`relative w-32 h-44 xs:w-36 xs:h-48 sm:w-48 sm:h-60 md:w-56 md:h-72 lg:w-64 lg:h-80 rounded-2xl sm:rounded-3xl p-3 sm:p-4 flex flex-col items-center justify-center border-2 transition-all duration-200 animate-rps-bob-ai shadow-2xl backdrop-blur-md`}
               style={{
                 borderColor: RPS_CHOICES[activeAIChoice].borderColor,
                 backgroundColor: RPS_CHOICES[activeAIChoice].bgColor,
@@ -582,7 +618,7 @@ export function Game({ profile, demoMode, difficulty = 'normal', onGameOver, onS
               <img
                 src={RPS_CHOICES[activeAIChoice].image}
                 alt={activeAIChoice}
-                className="w-14 h-14 xs:w-16 xs:h-16 sm:w-28 sm:h-28 object-contain filter drop-shadow-[0_8px_16px_rgba(0,0,0,0.5)]"
+                className="w-20 h-20 xs:w-24 xs:h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 lg:w-44 lg:h-44 object-contain filter drop-shadow-[0_8px_16px_rgba(0,0,0,0.5)]"
               />
               <span className="text-[11px] sm:text-base font-black text-white mt-1 uppercase tracking-wider">
                 {currentPhase === 'SHOWDOWN'

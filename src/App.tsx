@@ -47,6 +47,7 @@ const EMPTY_GAME_STATE: GameState = {
   chantWord: 'OẲN',
   gapCountdown: 5,
   liveGesture: null,
+  isHandMissing: false,
   shufflingAIChoice: 'rock',
   playerChoice: null,
   aiChoice: null,

@@ -56,7 +56,7 @@ export function Intro({ profile, difficulty, isFullscreen, onSelectDifficulty, o
       </header>
 
       {/* Main Content - Cực kỳ gọn gàng, chuẩn Mobile-First, 100% Không Scroll */}
-      <main className="my-auto py-1 flex flex-col md:flex-row items-center justify-center gap-3 md:gap-5 lg:gap-8 max-w-5xl mx-auto w-full shrink overflow-hidden">
+      <main className="my-auto py-1 flex flex-col md:flex-row items-center justify-center gap-3 md:gap-5 lg:gap-8 max-w-6xl mx-auto w-full shrink overflow-hidden">
         {/* Left Column: Title, 3 Moves Preview, Rounds, Profile, Difficulty, Action */}
         <div className="flex flex-col gap-1.5 sm:gap-2 max-w-md w-full animate-slide-left shrink-0">
           {/* Tag & Heading */}
@@ -69,7 +69,7 @@ export function Intro({ profile, difficulty, isFullscreen, onSelectDifficulty, o
               <span className="text-[#F4BE4F] text-[9px] sm:text-[10px] font-bold">Skeleton Khớp Bàn Tay</span>
             </div>
 
-            <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-white leading-tight">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight">
               OẲN TÙ XÌ ·{' '}
               <span className="bg-gradient-to-r from-[#F59E0B] via-[#EF4444] to-[#10B981] bg-clip-text text-transparent">
                 ĐẤU TRÍ VỚI AI
@@ -127,7 +127,7 @@ export function Intro({ profile, difficulty, isFullscreen, onSelectDifficulty, o
           {/* Player / Group Info Card */}
           <div className="p-1.5 sm:p-2 rounded-xl bg-gradient-to-r from-[#121c42]/90 to-[#0c1635]/90 border border-[#4C6DF0]/40 shadow-md flex items-center justify-between gap-2">
             <div className="flex items-center gap-2 min-w-0">
-              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-br from-[#4C6DF0]/30 to-[#00D89A]/30 border border-[#00D89A]/60 flex items-center justify-center p-0.5 shadow-sm shrink-0">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-[#4C6DF0]/30 to-[#00D89A]/30 border border-[#00D89A]/60 flex items-center justify-center p-0.5 shadow-sm shrink-0">
                 <CharacterAvatar character={character} />
               </div>
               <div className="flex flex-col min-w-0">
@@ -195,7 +195,7 @@ export function Intro({ profile, difficulty, isFullscreen, onSelectDifficulty, o
             <button
               type="button"
               onClick={onStart}
-              className="w-full min-h-[42px] sm:min-h-[46px] px-4 py-2 sm:py-2.5 rounded-xl bg-gradient-to-r from-[#00D89A] via-[#10B981] to-[#059669] text-[#022318] hover:shadow-[0_0_30px_rgba(0,216,154,0.7)] font-black text-xs sm:text-sm uppercase tracking-wider transition-all transform hover:scale-[1.01] active:scale-[0.99] cursor-pointer flex items-center justify-center gap-2 shadow-lg"
+              className="w-full min-h-[48px] sm:min-h-[54px] px-6 py-3 rounded-xl bg-gradient-to-r from-[#00D89A] via-[#10B981] to-[#059669] text-[#022318] hover:shadow-[0_0_30px_rgba(0,216,154,0.7)] font-black text-xs sm:text-sm uppercase tracking-wider transition-all transform hover:scale-[1.01] active:scale-[0.99] cursor-pointer flex items-center justify-center gap-2 shadow-lg"
             >
               <span className="text-base sm:text-lg">🖐️</span>
               <span>BẮT ĐẦU · XEM HƯỚNG DẪN AR</span>
@@ -205,7 +205,7 @@ export function Intro({ profile, difficulty, isFullscreen, onSelectDifficulty, o
         </div>
 
         {/* Right Preview Card: Chỉ hiển thị trên màn hình rộng Desktop (lg:) để không làm tràn màn hình Mobile */}
-        <div className="hidden md:flex flex-col items-center justify-center gap-2.5 sm:gap-3 p-3 sm:p-4 rounded-2xl bg-[#09112a]/85 border border-white/10 shadow-xl max-w-xs md:max-w-sm w-full animate-slide-right shrink-0">
+        <div className="hidden md:flex flex-col items-center justify-center gap-2.5 sm:gap-3 p-3 sm:p-4 rounded-2xl bg-[#09112a]/85 border border-white/10 shadow-xl max-w-sm md:max-w-md w-full animate-slide-right shrink-0">
           <div className="flex items-center gap-1.5 text-white/70 text-xs font-black uppercase tracking-wider">
             <span>🎯</span>
             <span>Quy Ước Ra Chiêu</span>

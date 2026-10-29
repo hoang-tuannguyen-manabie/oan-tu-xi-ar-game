@@ -72,7 +72,7 @@ export function TenRoundProgressBar({
         key={`turn-slot-${slotIndex}`}
         title={tooltip}
         className={`flex items-center justify-center rounded-xl border transition-all duration-200 shrink-0 select-none ${
-          compact ? 'w-6 h-6 text-[10px]' : 'w-7 h-7 sm:w-8 sm:h-8 text-xs sm:text-sm'
+          compact ? 'w-6 h-6 text-[10px]' : 'w-7 h-7 xs:w-8 xs:h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 text-xs sm:text-sm md:text-base font-black'
         } ${bgStyle}`}
       >
         <span>{icon}</span>
@@ -81,9 +81,9 @@ export function TenRoundProgressBar({
   };
 
   return (
-    <div className="flex flex-col items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-[#060e24]/90 border border-white/15 backdrop-blur-md shadow-lg max-w-full shrink-0">
+    <div className="flex flex-col items-center gap-1.5 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-2xl bg-[#060e24]/90 border border-white/20 backdrop-blur-md shadow-xl max-w-full shrink-0">
       {/* Top Header & Tỷ số nhanh */}
-      <div className="flex items-center justify-between gap-3 w-full text-[10px] sm:text-xs">
+      <div className="flex items-center justify-between gap-3 w-full text-xs sm:text-sm">
         <span className="font-black uppercase tracking-wider text-white/70 flex items-center gap-1.5 shrink-0">
           <span>🎯</span>
           <span>TIẾN ĐỘ 10 VÒNG ĐẤU</span>
