@@ -126,23 +126,57 @@ export function Game({ profile, demoMode, difficulty = 'normal', onGameOver, onS
         if (!active || finishedRef.current) return;
 
         // Chỉ nhận diện 1 bàn tay duy nhất theo yêu cầu
-        landmarkerRef.current = await HandLandmarker.createFromOptions(vision, {
-          baseOptions: {
-            modelAssetPath:
-              'https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task',
-            delegate: 'GPU',
-          },
-          runningMode: 'VIDEO',
-          numHands: 1, // 1 tay duy nhất
-          minHandDetectionConfidence: 0.55,
-          minHandPresenceConfidence: 0.55,
-          minTrackingConfidence: 0.55,
-        });
+        // Tối ưu cho Tablet TECLAST-P30 (Mali-G57 / Unisoc T7200 / Android 16):
+        // Thử GPU trước, nếu GPU shader/WebGL lỗi thì tự động fallback sang CPU mượt mà!
+        let landmarker: HandLandmarker | null = null;
+        try {
+          landmarker = await HandLandmarker.createFromOptions(vision, {
+            baseOptions: {
+              modelAssetPath:
+                'https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task',
+              delegate: 'GPU',
+            },
+            runningMode: 'VIDEO',
+            numHands: 1,
+            minHandDetectionConfidence: 0.5,
+            minHandPresenceConfidence: 0.5,
+            minTrackingConfidence: 0.5,
+          });
+        } catch (gpuErr) {
+          console.warn('GPU delegate không khả dụng trên GPU này, chuyển sang CPU fallback:', gpuErr);
+          landmarker = await HandLandmarker.createFromOptions(vision, {
+            baseOptions: {
+              modelAssetPath:
+                'https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task',
+              delegate: 'CPU',
+            },
+            runningMode: 'VIDEO',
+            numHands: 1,
+            minHandDetectionConfidence: 0.5,
+            minHandPresenceConfidence: 0.5,
+            minTrackingConfidence: 0.5,
+          });
+        }
+        landmarkerRef.current = landmarker;
 
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: 'user', width: { ideal: 960 }, height: { ideal: 540 } },
-          audio: false,
-        });
+        // Tối ưu camera trước 2MP của TECLAST-P30 (640x480 / 30fps tiết kiệm pin & GPU)
+        let stream: MediaStream;
+        try {
+          stream = await navigator.mediaDevices.getUserMedia({
+            video: {
+              facingMode: 'user',
+              width: { ideal: 640, max: 1280 },
+              height: { ideal: 480, max: 720 },
+              frameRate: { ideal: 30, max: 60 },
+            },
+            audio: false,
+          });
+        } catch {
+          stream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: 'user' },
+            audio: false,
+          });
+        }
 
         if (!active || finishedRef.current) {
           stream.getTracks().forEach((t) => t.stop());
@@ -153,6 +187,8 @@ export function Game({ profile, demoMode, difficulty = 'normal', onGameOver, onS
 
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
+          videoRef.current.setAttribute('playsinline', 'true');
+          videoRef.current.setAttribute('webkit-playsinline', 'true');
           videoRef.current.onloadedmetadata = () => {
             if (!active || finishedRef.current) {
               stopCamera();
@@ -247,7 +283,7 @@ export function Game({ profile, demoMode, difficulty = 'normal', onGameOver, onS
     if (!video || !landmarker || !container || video.readyState < 2) return cachedLandmarksRef.current;
 
     const now = performance.now();
-    if (now - lastHandDetectMsRef.current < 25) return cachedLandmarksRef.current;
+    if (now - lastHandDetectMsRef.current < 28) return cachedLandmarksRef.current;
     if (lastVideoTimeRef.current === video.currentTime) return cachedLandmarksRef.current;
 
     lastVideoTimeRef.current = video.currentTime;
@@ -320,7 +356,9 @@ export function Game({ profile, demoMode, difficulty = 'normal', onGameOver, onS
       <video
         ref={videoRef}
         playsInline
+        autoPlay
         muted
+        disablePictureInPicture
         className={`absolute inset-0 w-full h-full -scale-x-100 object-cover opacity-25 mix-blend-screen pointer-events-none ${
           cameraReady ? '' : 'hidden'
         }`}
@@ -400,7 +438,7 @@ export function Game({ profile, demoMode, difficulty = 'normal', onGameOver, onS
 
             {/* Khung hiển thị chiêu thức: Lắc lên xuống nhẹ (animate-rps-bob-player) */}
             <div
-              className={`relative w-24 h-32 xs:w-28 xs:h-36 sm:w-44 sm:h-52 rounded-2xl sm:rounded-3xl p-2 sm:p-3 flex flex-col items-center justify-center border-2 transition-all duration-200 ${
+              className={`relative w-24 h-32 xs:w-28 xs:h-36 sm:w-36 sm:h-44 md:w-44 md:h-52 lg:w-48 lg:h-56 rounded-2xl sm:rounded-3xl p-2 sm:p-3 flex flex-col items-center justify-center border-2 transition-all duration-200 ${
                 activePlayerGesture
                   ? 'animate-rps-bob-player shadow-2xl backdrop-blur-md'
                   : 'border-dashed border-white/20 bg-white/5 animate-pulse'
@@ -422,7 +460,7 @@ export function Game({ profile, demoMode, difficulty = 'normal', onGameOver, onS
                   <img
                     src={RPS_CHOICES[activePlayerGesture].image}
                     alt={activePlayerGesture}
-                    className="w-14 h-14 xs:w-16 xs:h-16 sm:w-28 sm:h-28 object-contain filter drop-shadow-[0_8px_16px_rgba(0,0,0,0.5)] transform -scale-x-100"
+                    className="w-14 h-14 xs:w-16 xs:h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 object-contain filter drop-shadow-[0_8px_16px_rgba(0,0,0,0.5)] transform -scale-x-100"
                   />
                   <span className="text-[11px] sm:text-base font-black text-white mt-1 uppercase tracking-wider">
                     {RPS_CHOICES[activePlayerGesture].emoji} {RPS_CHOICES[activePlayerGesture].vietnameseName}
@@ -453,7 +491,7 @@ export function Game({ profile, demoMode, difficulty = 'normal', onGameOver, onS
 
                 {/* Chữ OẲN - TÙ - XÌ to nổi bật */}
                 <div
-                  className={`font-black font-mono leading-none tracking-wider text-4xl xs:text-5xl sm:text-7xl drop-shadow-[0_0_35px_rgba(245,158,11,0.8)] transition-all duration-150 ${
+                  className={`font-black font-mono leading-none tracking-wider text-4xl xs:text-5xl sm:text-6xl md:text-7xl drop-shadow-[0_0_35px_rgba(245,158,11,0.8)] transition-all duration-150 ${
                     chantWord === 'OẲN'
                       ? 'text-[#F59E0B] scale-100'
                       : chantWord === 'TÙ'

@@ -7,12 +7,14 @@ import { CharacterAvatar, getCharacterById } from './PlayerSetupModal';
 interface IntroProps {
   profile: PlayerProfile;
   difficulty: AIDifficulty;
+  isFullscreen?: boolean;
   onSelectDifficulty: (d: AIDifficulty) => void;
   onOpenSetup: () => void;
+  onToggleFullscreen?: () => void;
   onStart: () => void;
 }
 
-export function Intro({ profile, difficulty, onSelectDifficulty, onOpenSetup, onStart }: IntroProps) {
+export function Intro({ profile, difficulty, isFullscreen, onSelectDifficulty, onOpenSetup, onToggleFullscreen, onStart }: IntroProps) {
   const character = getCharacterById(profile.characterId);
 
   return (
@@ -35,13 +37,26 @@ export function Intro({ profile, difficulty, onSelectDifficulty, onOpenSetup, on
           </div>
         </div>
 
-        <div className="px-2 py-0.5 rounded-full bg-[#00D89A]/15 border border-[#00D89A]/40 text-[#00D89A] text-[9px] sm:text-[10px] font-black tracking-wider uppercase">
-          ● SẴN SÀNG
+        <div className="flex items-center gap-1.5">
+          {onToggleFullscreen && (
+            <button
+              type="button"
+              onClick={onToggleFullscreen}
+              title={isFullscreen ? 'Thu nhỏ' : 'Toàn màn hình (Tablet)'}
+              className="min-h-[28px] sm:min-h-[30px] px-2.5 py-0.5 rounded-xl bg-white/10 hover:bg-white/15 text-white text-xs font-bold transition-all cursor-pointer flex items-center gap-1"
+            >
+              <span>{isFullscreen ? '🗗' : '⛶'}</span>
+              <span className="hidden sm:inline text-[11px]">{isFullscreen ? 'Thu nhỏ' : 'Toàn màn hình'}</span>
+            </button>
+          )}
+          <div className="px-2 py-0.5 rounded-full bg-[#00D89A]/15 border border-[#00D89A]/40 text-[#00D89A] text-[9px] sm:text-[10px] font-black tracking-wider uppercase">
+            ● SẴN SÀNG
+          </div>
         </div>
       </header>
 
       {/* Main Content - Cực kỳ gọn gàng, chuẩn Mobile-First, 100% Không Scroll */}
-      <main className="my-auto py-1 flex flex-col lg:flex-row items-center justify-center gap-3 sm:gap-6 max-w-4xl mx-auto w-full shrink overflow-hidden">
+      <main className="my-auto py-1 flex flex-col md:flex-row items-center justify-center gap-3 md:gap-5 lg:gap-8 max-w-5xl mx-auto w-full shrink overflow-hidden">
         {/* Left Column: Title, 3 Moves Preview, Rounds, Profile, Difficulty, Action */}
         <div className="flex flex-col gap-1.5 sm:gap-2 max-w-md w-full animate-slide-left shrink-0">
           {/* Tag & Heading */}
@@ -64,7 +79,7 @@ export function Intro({ profile, difficulty, onSelectDifficulty, onOpenSetup, on
             </div>
 
           {/* 3 Chiêu Thức Mini Strip (Hiển thị ngay trên mobile, trực quan, không chiếm chỗ) */}
-          <div className="grid grid-cols-3 gap-1.5 p-1.5 rounded-xl bg-black/40 border border-white/10">
+          <div className="grid grid-cols-3 gap-1.5 p-1.5 rounded-xl bg-black/40 border border-white/10 md:hidden">
             <div className="flex items-center gap-1.5 px-1.5 py-1 rounded-lg bg-[#F59E0B]/10 border border-[#F59E0B]/30">
               <img src={RPS_CHOICES.rock.image} alt="Búa" className="w-5 h-5 sm:w-6 sm:h-6 object-contain shrink-0" />
               <div className="flex flex-col min-w-0">
@@ -190,7 +205,7 @@ export function Intro({ profile, difficulty, onSelectDifficulty, onOpenSetup, on
         </div>
 
         {/* Right Preview Card: Chỉ hiển thị trên màn hình rộng Desktop (lg:) để không làm tràn màn hình Mobile */}
-        <div className="hidden lg:flex flex-col items-center justify-center gap-3 p-4 rounded-2xl bg-[#09112a]/85 border border-white/10 shadow-xl max-w-xs w-full animate-slide-right shrink-0">
+        <div className="hidden md:flex flex-col items-center justify-center gap-2.5 sm:gap-3 p-3 sm:p-4 rounded-2xl bg-[#09112a]/85 border border-white/10 shadow-xl max-w-xs md:max-w-sm w-full animate-slide-right shrink-0">
           <div className="flex items-center gap-1.5 text-white/70 text-xs font-black uppercase tracking-wider">
             <span>🎯</span>
             <span>Quy Ước Ra Chiêu</span>

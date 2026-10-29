@@ -6,7 +6,9 @@ import { CharacterAvatar, getCharacterById } from './PlayerSetupModal';
 
 interface TutorialProps {
   profile: PlayerProfile;
+  isFullscreen?: boolean;
   onBack: () => void;
+  onToggleFullscreen?: () => void;
   onStart: () => void;
 }
 
@@ -24,7 +26,7 @@ interface GestureGuideItem {
   badgeLose: string;
 }
 
-export function Tutorial({ profile, onBack, onStart }: TutorialProps) {
+export function Tutorial({ profile, isFullscreen, onBack, onToggleFullscreen, onStart }: TutorialProps) {
   const character = getCharacterById(profile.characterId);
 
   const gesturesGuide: GestureGuideItem[] = [
@@ -93,14 +95,27 @@ export function Tutorial({ profile, onBack, onStart }: TutorialProps) {
           </div>
         </div>
 
-        <button
-          type="button"
-          onClick={onBack}
-          className="min-h-[30px] px-3 py-1 rounded-xl bg-white/10 hover:bg-white/15 text-white text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-1.5 shrink-0"
-        >
-          <span>←</span>
-          <span>Trang chủ</span>
-        </button>
+        <div className="flex items-center gap-1.5">
+          {onToggleFullscreen && (
+            <button
+              type="button"
+              onClick={onToggleFullscreen}
+              title={isFullscreen ? 'Thu nhỏ' : 'Toàn màn hình (Tablet)'}
+              className="min-h-[28px] sm:min-h-[30px] px-2.5 py-0.5 rounded-xl bg-white/10 hover:bg-white/15 text-white text-xs font-bold transition-all cursor-pointer flex items-center gap-1"
+            >
+              <span>{isFullscreen ? '🗗' : '⛶'}</span>
+              <span className="hidden sm:inline text-[11px]">{isFullscreen ? 'Thu nhỏ' : 'Toàn màn hình'}</span>
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={onBack}
+            className="min-h-[28px] sm:min-h-[30px] px-3 py-1 rounded-xl bg-white/10 hover:bg-white/15 text-white text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-1.5 shrink-0"
+          >
+            <span>←</span>
+            <span>Trang chủ</span>
+          </button>
+        </div>
       </header>
 
       {/* Main Content: Bố cục cân đối (max-w-5xl), chữ to rõ, 100% Zero-Scroll */}

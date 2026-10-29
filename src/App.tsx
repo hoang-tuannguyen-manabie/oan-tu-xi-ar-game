@@ -14,6 +14,7 @@ import {
 } from './data/characters';
 import { audio } from './utils/audio';
 import { GameState } from './utils/engine';
+import { isFullscreen, toggleFullscreen } from './utils/fullscreen';
 
 type Screen = 'intro' | 'tutorial' | 'playing' | 'debrief';
 
@@ -76,6 +77,19 @@ export default function App() {
   const [finalState, setFinalState] = useState<GameState>(EMPTY_GAME_STATE);
   const [runKey, setRunKey] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [fullscreenActive, setFullscreenActive] = useState(false);
+
+  useEffect(() => {
+    const handleFsChange = () => {
+      setFullscreenActive(isFullscreen());
+    };
+    document.addEventListener('fullscreenchange', handleFsChange);
+    document.addEventListener('webkitfullscreenchange', handleFsChange);
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFsChange);
+      document.removeEventListener('webkitfullscreenchange', handleFsChange);
+    };
+  }, []);
 
   useEffect(() => {
     const intensity = state.phase === 'SHOWDOWN' ? 0.8 : state.streak >= 2 ? 0.5 : 0.2;
@@ -161,12 +175,14 @@ export default function App() {
             state={state}
             profile={playerProfile}
             muted={muted}
+            isFullscreen={fullscreenActive}
             onToggleMute={() => {
               setMuted((m) => {
                 audio.setMuted(!m);
                 return !m;
               });
             }}
+            onToggleFullscreen={toggleFullscreen}
             onQuit={handleBackToIntro}
           />
           <main className="relative min-h-0 flex-1">
@@ -186,8 +202,10 @@ export default function App() {
           <Intro
             profile={playerProfile}
             difficulty={difficulty}
+            isFullscreen={fullscreenActive}
             onSelectDifficulty={setDifficulty}
             onOpenSetup={() => setProfileModalOpen(true)}
+            onToggleFullscreen={toggleFullscreen}
             onStart={handleGoToTutorial}
           />
         </div>
@@ -196,7 +214,9 @@ export default function App() {
         <div key="screen-tutorial" className="flex-1 flex flex-col h-full overflow-hidden animate-screen-intro-enter">
           <Tutorial
             profile={playerProfile}
+            isFullscreen={fullscreenActive}
             onBack={handleBackToIntro}
+            onToggleFullscreen={toggleFullscreen}
             onStart={handleStartGame}
           />
         </div>
@@ -224,13 +244,17 @@ function GameHud({
   state,
   profile,
   muted,
+  isFullscreen: isFs = false,
   onToggleMute,
+  onToggleFullscreen,
   onQuit,
 }: {
   state: GameState;
   profile: PlayerProfile;
   muted: boolean;
+  isFullscreen?: boolean;
   onToggleMute: () => void;
+  onToggleFullscreen?: () => void;
   onQuit: () => void;
 }) {
   const char = getCharacterById(profile.characterId);
@@ -299,6 +323,17 @@ function GameHud({
 
       {/* Controls */}
       <div className="flex items-center gap-1.5 shrink-0">
+        {onToggleFullscreen && (
+          <button
+            type="button"
+            onClick={onToggleFullscreen}
+            title={isFs ? 'Thu nhỏ' : 'Toàn màn hình (Tablet)'}
+            className="w-8 h-8 rounded-xl bg-white/10 hover:bg-white/15 text-white text-xs flex items-center justify-center transition-all cursor-pointer"
+          >
+            {isFs ? '🗗' : '⛶'}
+          </button>
+        )}
+
         <button
           type="button"
           onClick={onToggleMute}
