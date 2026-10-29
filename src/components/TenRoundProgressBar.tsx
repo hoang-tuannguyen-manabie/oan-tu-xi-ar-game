@@ -7,6 +7,7 @@ interface TenRoundProgressBarProps {
   currentTurn: number; // 1..5
   phase: GamePhase;
   compact?: boolean;
+  inHeader?: boolean;
 }
 
 export function TenRoundProgressBar({
@@ -15,6 +16,7 @@ export function TenRoundProgressBar({
   currentTurn,
   phase,
   compact = false,
+  inHeader = false,
 }: TenRoundProgressBarProps) {
   // Tính chỉ số tổng thể của lượt hiện tại (0..9)
   let currentOverallIndex: number;
@@ -79,6 +81,94 @@ export function TenRoundProgressBar({
       </div>
     );
   };
+
+  if (inHeader) {
+    return (
+      <div className="flex items-center gap-1.5 sm:gap-2.5 px-2 sm:px-3 py-1 rounded-xl bg-black/45 border border-white/10 shrink-0 select-none backdrop-blur-md">
+        {/* Vòng 1: Lượt 1..5 */}
+        <div className="flex items-center gap-1 flex-nowrap shrink-0">
+          <span className="text-[8px] sm:text-[9px] font-black uppercase text-[#38BDF8] px-0.5 shrink-0">
+            V1
+          </span>
+          {[0, 1, 2, 3, 4].map((idx) => {
+            const record = history[idx];
+            const isCurrent = idx === currentOverallIndex && phase !== 'GAMEOVER';
+            const turnNumber = idx + 1;
+            let bgStyle = 'bg-white/5 border-white/15 text-white/30';
+            let icon = `${turnNumber}`;
+            if (record) {
+              if (record.result === 'win') {
+                bgStyle = 'bg-[#00D89A] border-[#00D89A] text-[#022318] shadow-[0_0_10px_rgba(0,216,154,0.7)] font-black';
+                icon = '✓';
+              } else if (record.result === 'lose') {
+                bgStyle = 'bg-[#EF4444] border-[#EF4444] text-white shadow-[0_0_10px_rgba(239,68,68,0.7)] font-black';
+                icon = '✕';
+              } else {
+                bgStyle = 'bg-[#F59E0B] border-[#F59E0B] text-[#022318] shadow-[0_0_10px_rgba(245,158,11,0.7)] font-black';
+                icon = '=';
+              }
+            } else if (isCurrent) {
+              bgStyle = 'bg-[#38BDF8] border-[#38BDF8] text-[#02182b] shadow-[0_0_10px_rgba(56,189,248,0.7)] font-black';
+            }
+            return (
+              <div
+                key={`hdr-turn-${idx}`}
+                className={`w-5 h-6 sm:w-6 sm:h-7 md:w-7 md:h-7 rounded-lg border flex items-center justify-center text-[10px] sm:text-xs md:text-sm shrink-0 font-mono ${bgStyle}`}
+              >
+                <span>{icon}</span>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Divider */}
+        <span className="text-white/30 text-xs font-bold shrink-0">•</span>
+
+        {/* Vòng 2: Lượt 6..10 */}
+        <div className="flex items-center gap-1 flex-nowrap shrink-0">
+          <span className="text-[8px] sm:text-[9px] font-black uppercase text-[#00D89A] px-0.5 shrink-0">
+            V2
+          </span>
+          {[5, 6, 7, 8, 9].map((idx) => {
+            const record = history[idx];
+            const isCurrent = idx === currentOverallIndex && phase !== 'GAMEOVER';
+            const turnNumber = idx + 1;
+            let bgStyle = 'bg-white/5 border-white/15 text-white/30';
+            let icon = `${turnNumber}`;
+            if (record) {
+              if (record.result === 'win') {
+                bgStyle = 'bg-[#00D89A] border-[#00D89A] text-[#022318] shadow-[0_0_10px_rgba(0,216,154,0.7)] font-black';
+                icon = '✓';
+              } else if (record.result === 'lose') {
+                bgStyle = 'bg-[#EF4444] border-[#EF4444] text-white shadow-[0_0_10px_rgba(239,68,68,0.7)] font-black';
+                icon = '✕';
+              } else {
+                bgStyle = 'bg-[#F59E0B] border-[#F59E0B] text-[#022318] shadow-[0_0_10px_rgba(245,158,11,0.7)] font-black';
+                icon = '=';
+              }
+            } else if (isCurrent) {
+              bgStyle = 'bg-[#38BDF8] border-[#38BDF8] text-[#02182b] shadow-[0_0_10px_rgba(56,189,248,0.7)] font-black';
+            }
+            return (
+              <div
+                key={`hdr-turn-${idx}`}
+                className={`w-5 h-6 sm:w-6 sm:h-7 md:w-7 md:h-7 rounded-lg border flex items-center justify-center text-[10px] sm:text-xs md:text-sm shrink-0 font-mono ${bgStyle}`}
+              >
+                <span>{icon}</span>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Tỷ số nhanh */}
+        <div className="hidden lg:flex items-center gap-1.5 pl-1.5 border-l border-white/10 text-[9px] sm:text-[10px] font-bold shrink-0">
+          <span className="text-[#00D89A]">✓{wins}</span>
+          <span className="text-[#EF4444]">✕{losses}</span>
+          <span className="text-[#F59E0B]">={draws}</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col items-center gap-1.5 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-2xl bg-[#060e24]/90 border border-white/20 backdrop-blur-md shadow-xl max-w-full shrink-0">

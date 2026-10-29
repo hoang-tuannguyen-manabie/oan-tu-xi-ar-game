@@ -407,56 +407,39 @@ export function Game({ profile, demoMode, difficulty = 'normal', onGameOver, onS
       {/* ARENA INTERACTION LAYER                                      */}
       {/* ============================================================ */}
       <div className="absolute inset-0 z-20 flex flex-col justify-between p-2.5 sm:p-4 pointer-events-none">
-        {/* Top Battle Info Bar + 10-Round Status Bar */}
-        <div className="flex flex-col gap-1.5 sm:gap-2 max-w-5xl mx-auto w-full">
-          <div className="hidden md:flex items-center justify-between gap-2 w-full">
-            {/* Player Card */}
-            <div className="flex items-center gap-2 sm:gap-2.5 p-2 sm:p-2.5 rounded-2xl bg-[#08122c]/85 border border-[#38BDF8]/40 shadow-lg backdrop-blur-md">
-              <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-[#4C6DF0]/30 to-[#00D89A]/30 border border-[#00D89A] p-0.5 shrink-0">
-                <CharacterAvatar character={selectedChar} />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-[9px] font-bold text-white/50 uppercase tracking-wider">Người Chơi</span>
-                <span className="text-xs sm:text-sm font-black text-white truncate max-w-[110px] sm:max-w-[160px]">
-                  {profile.groupName}
-                </span>
-                <span className="text-[10px] text-[#00D89A] font-bold">Lớp: {profile.className}</span>
-              </div>
+        {/* Top Matchup Header: Hiển thị gọn trên màn hình lớn */}
+        <div className="hidden md:flex items-center justify-between gap-3 max-w-5xl mx-auto w-full px-2">
+          {/* Player Card */}
+          <div className="flex items-center gap-2.5 p-2 rounded-2xl bg-[#08122c]/85 border border-[#38BDF8]/40 shadow-lg backdrop-blur-md">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-[#4C6DF0]/30 to-[#00D89A]/30 border border-[#00D89A] p-0.5 shrink-0">
+              <CharacterAvatar character={selectedChar} />
             </div>
-
-            {/* Central Round Badge */}
-            <div className="flex flex-col items-center px-3 py-1.5 rounded-2xl bg-black/60 border border-white/15 backdrop-blur-md">
-              <div className="flex items-center gap-1 text-[10px] sm:text-xs font-black uppercase tracking-wider text-white/80">
-                <span className="text-[#38BDF8]">VÒNG {engineState?.round || 1}/2</span>
-                <span>•</span>
-                <span className="text-[#FBBF24]">LƯỢT {engineState?.turn || 1}/5</span>
-              </div>
-              <span className="text-[9px] text-[#00D89A] font-mono font-bold">
-                Điểm: {engineState?.score || 0}
+            <div className="flex flex-col">
+              <span className="text-[8.5px] font-bold text-white/50 uppercase tracking-wider">Người Chơi</span>
+              <span className="text-xs sm:text-sm font-black text-white truncate max-w-[130px]">
+                {profile.groupName}
               </span>
-            </div>
-
-            {/* AI Opponent Card */}
-            <div className="flex items-center gap-2 sm:gap-2.5 p-2 sm:p-2.5 rounded-2xl bg-[#08122c]/85 border border-[#EF4444]/40 shadow-lg backdrop-blur-md">
-              <div className="flex flex-col items-end">
-                <span className="text-[9px] font-bold text-white/50 uppercase tracking-wider">Đối Thủ</span>
-                <span className="text-xs sm:text-sm font-black text-[#EF4444]">MANABIE AI</span>
-                <span className="text-[10px] text-white/60 font-semibold">Tự động ngẫu nhiên</span>
-              </div>
-              <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-[#EF4444]/30 to-[#F59E0B]/30 border border-[#EF4444] flex items-center justify-center text-xl shrink-0">
-                🤖
-              </div>
+              <span className="text-[9.5px] text-[#00D89A] font-bold">Lớp: {profile.className}</span>
             </div>
           </div>
 
-          {/* Thanh 10 Vòng Đấu: Thắng máy tô xanh, thua máy tô đỏ, hòa tô vàng */}
-          <div className="w-full flex justify-center">
-            <TenRoundProgressBar
-              history={engineState?.history || []}
-              currentRound={engineState?.round || 1}
-              currentTurn={engineState?.turn || 1}
-              phase={currentPhase}
-            />
+          {/* Central Round/Turn Pill */}
+          <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-black/60 border border-white/15 backdrop-blur-md text-[11px] font-black uppercase text-white/80">
+            <span className="text-[#38BDF8]">VÒNG {engineState?.round || 1}/2</span>
+            <span>•</span>
+            <span className="text-[#FBBF24]">LƯỢT {engineState?.turn || 1}/5</span>
+          </div>
+
+          {/* AI Opponent Card */}
+          <div className="flex items-center gap-2.5 p-2 rounded-2xl bg-[#08122c]/85 border border-[#EF4444]/40 shadow-lg backdrop-blur-md">
+            <div className="flex flex-col items-end">
+              <span className="text-[8.5px] font-bold text-white/50 uppercase tracking-wider">Đối Thủ</span>
+              <span className="text-xs sm:text-sm font-black text-[#EF4444]">MANABIE AI</span>
+              <span className="text-[9.5px] text-white/60 font-semibold">Tự động ngẫu nhiên</span>
+            </div>
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-[#EF4444]/30 to-[#F59E0B]/30 border border-[#EF4444] flex items-center justify-center text-lg shrink-0">
+              🤖
+            </div>
           </div>
         </div>
 
